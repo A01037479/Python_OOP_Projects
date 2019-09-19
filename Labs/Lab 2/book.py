@@ -5,6 +5,21 @@ class Book:
         self.author = author
         self.num_copies = num_copies
 
+    def get_title(self):
+        return self.title
+
+    def get_call_number(self):
+        return self.call_number
+
+    def get_author(self):
+        return self.author
+
+    def get_num_copies(self):
+        return self.num_copies
+
+    def set_num_copies(self, num_copies):
+        self.num_copies = num_copies
+
     def check_availability(self):
         if self.num_copies >= 1:
             return True
