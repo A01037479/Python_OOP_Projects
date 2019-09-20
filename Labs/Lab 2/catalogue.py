@@ -1,20 +1,33 @@
 from difflib import get_close_matches
-from item import Item
 from book import Book
 from dvd import DVD
 from journal import Journal
 
 
 class Catalogue:
+    """
+    A class that represents a catalogue of library, contains a list of items
+    """
     def __init__(self):
+        """
+        initializes a catalogue
+        """
         self.item_list = []
 
     def add_item(self):
+        """
+        Add items to catalogue
+        """
         item = LibraryItemGenerator.create_item()
         if item not in self.item_list:
             self.item_list.append(item)
 
     def remove_item(self, call_number):
+        """
+        Remove items by call numbers from catalogue
+        :param call_number: unique identifier of an item
+        :return: True if item founded, False otherwise
+        """
         i = 0
         while i < len(self.item_list):
             if self.item_list[i].get_call_number() == call_number:
@@ -26,6 +39,11 @@ class Catalogue:
         return False
 
     def find_item(self, title):
+        """
+        Searches for items by item title from catalogue
+        :param title: title of an item
+        :return: True the item if founded
+        """
         i = 0
         title_list = []
         while i < len(self.item_list):
@@ -42,15 +60,25 @@ class Catalogue:
             print(f'Item not found, do you mean {str(", ").join(similar_titles)}?')
 
     def display_available_items(self):
+        """
+        Prints all the items from catalogue
+        """
         print('Available items:')
         for item in self.item_list:
             print(item)
 
 
 class LibraryItemGenerator:
+    """
+    A static class that helps generates library items
+    """
 
     @staticmethod
     def create_item():
+        """
+        A static method to prompt users information to create items
+        :return: item
+        """
         item_type = input("Enter item type: ").upper().lower().strip()
         if item_type in ['book', 'dvd', 'journal']:
             title = input(f"Enter {item_type} title: ")

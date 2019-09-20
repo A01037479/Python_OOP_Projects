@@ -2,10 +2,22 @@ from catalogue import Catalogue
 
 
 class Library:
+    """
+    A class represents library
+    """
     def __init__(self, catalogue):
+        """
+        Initialize a library
+        :param catalogue: a catalogue that contains items
+        """
         self.catalogue = catalogue
 
     def check_out(self, call_number):
+        """
+        Checks out an item from library
+        :param call_number: A string that uniquely identifies item
+        :return: True if item founded, False otherwise
+        """
         i = 0
         while i < len(self.catalogue.item_list):
             if self.catalogue.item_list[i].get_call_number() == call_number \
@@ -17,7 +29,12 @@ class Library:
         print('Item not found or unavailable.')
         return False
 
-    def return_book(self, call_number):
+    def return_item(self, call_number):
+        """
+        Returns an item to library
+        :param call_number:  A string that uniquely identifies item
+        :return: True if item founded, False otherwise
+        """
         i = 0
         while i < len(self.catalogue.item_list):
             if self.catalogue.item_list[i].get_call_number() == call_number:
@@ -28,6 +45,10 @@ class Library:
 
 
 def main():
+    """
+    Main method that drives the program.
+    Creates a menu for users to interact with library
+    """
     catalogue = Catalogue()
     library = Library(catalogue)
     stop = False
@@ -54,7 +75,7 @@ def main():
             library.check_out(call_num)
         elif user_input == '5':
             call_num = input('Enter item call number: ')
-            library.return_book(call_num)
+            library.return_item(call_num)
         elif user_input == '6':
             library.catalogue.display_available_items()
         elif user_input == '7':
