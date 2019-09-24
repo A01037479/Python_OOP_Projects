@@ -1,10 +1,13 @@
+from abc import ABC
 from datetime import datetime
 
 
-class Pet:
+class Pet(ABC):
     def __init__(self):
+        self.name = None
         self.birth_date = datetime.now()
         self.last_checked_time = datetime.now()
+        self.favorite_food = None
         self.hunger = 0
         self.health = 100
         self.happiness = 100
@@ -12,9 +15,55 @@ class Pet:
         self.hunger_increase_rate = None
         self.happiness_decline_rate = None
         self.health_standard = None
-        self.happiness_gain = 5
+        self.happiness_gain_rate = None
+        self.message = None
         self.is_sick = False
         self.is_dead = False
+
+    def get_name(self):
+        return self.name
+
+    def get_favorite_food(self):
+        return self.favorite_food
+
+    def get_last_checked_time(self):
+        return self.last_checked_time
+
+    def get_hunger(self):
+        return self.hunger
+
+    def get_health(self):
+        return self.health
+
+    def get_happiness(self):
+        return self.happiness
+
+    def get_health_decline_rate(self):
+        return self.health_decline_rate
+
+    def get_hunger_increase_rate(self):
+        return self.hunger_increase_rate
+
+    def get_happiness_decline_rate(self):
+        return self.happiness_decline_rate
+
+    def get_health_standard(self):
+        return self.health_standard
+
+    def get_happiness_gain_rate(self):
+        return self.happiness_gain_rate
+
+    def get_message(self):
+        return self.message
+
+    def get_is_sick(self):
+        return self.is_sick
+
+    def get_is_dead(self):
+        return self.is_dead
+
+    def set_last_checked_time(self, time):
+        self.last_checked_time = time
 
     def lower_health(self, time_elapsed):
         if self.hunger == 100:
@@ -46,6 +95,9 @@ class Pet:
     def fall_sick(self):
         self.is_sick = True
 
+    def recover_health_status(self):
+        self.is_sick = False
+
     def die(self):
         self.is_dead = True
 
@@ -57,9 +109,9 @@ class Pet:
         return stat
 
     def __str__(self):
-        return (f'Pet name: {self.__class__.__name__}\n'
-                f'Birth date: {self.birth_date.strftime("%b %d %Y %H:%M:%S")}\n'
-                f'Hunger level: {self.hunger}\n'
-                f'Happiness level: {self.happiness}\n'
-                f'Health level: {self.health}\n'
-                f'Health status: {"Sick" if self.is_sick else "Healthy"}\n')
+        return (f'Pet name:         {self.__class__.__name__}\n'
+                f'Birth date:       {self.birth_date.strftime("%b %d %Y %H:%M:%S")}\n'
+                f'Hunger level:     {self.hunger}/100\n'
+                f'Happiness level:  {self.happiness}/100\n'
+                f'Health level:     {self.health}/100\n'
+                f'Health status:    {"Sick" if self.is_sick else "Healthy"}\n')

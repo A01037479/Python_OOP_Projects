@@ -6,18 +6,23 @@ from game import Game
 class Controller:
     @staticmethod
     def start_game():
-        print('Welcome to Tamagotchi League of Legends edition!\n'
-              'Would you like to start hatching an egg now?')
-        user_input = int(input(' 1. Yes, hatch it!\n'
+        print('Welcome to Tamagotchi League of Legends edition!')
+        while 1:
+            print('Would you like to start hatching an egg now?')
+            user_input = input(' 1. Yes, hatch it!\n'
                                ' 2. No, exit game.\n'
-                               '  : '))
-
-        Game.hatch() if user_input == 1 else Controller.end_game()
-        Controller.proceed_game()
+                               '  : ')
+            if user_input == "1":
+                Game.hatch()
+                Controller.proceed_game()
+            elif user_input == '2':
+                Controller.end_game()
+            else:
+                print('Invalid option.')
 
     @staticmethod
     def proceed_game():
-        pet_name = Game.pet.__class__.__name__
+        pet_name = Game.pet.get_name()
         continue_game = True
         while continue_game:
             user_input = input(f'What would you like to do?\n'
@@ -43,12 +48,14 @@ class Controller:
 
     @staticmethod
     def restart():
-        user_input = input(f'{Game.pet.__class__.__name__} has died :( \n'
+        user_input = input(f'{Game.pet.get_name()} has died :( \n'
                            f'Would you like to start over and hatch a new egg?\n'
                            f' 1. Yes, start a new game! \n 2. No, exit game.\n'
                            f'  : ')
         if user_input == '1':
             Controller.start_game()
+        elif user_input == '2':
+            Controller.restart()
         else:
             Controller.end_game()
 
