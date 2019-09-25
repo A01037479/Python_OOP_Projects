@@ -1,5 +1,6 @@
 Overview:
-The game is like a Tamagotchi game.
+The game is like a Tamagotchi game, but with League of Legends champions
+as pet!
 Player gets to randomly hatch a pet out of three possible species from
 an egg. As time goes on, player's responsibilities are to interact with
 the pet through feeding food, providing medicines and playing mini-games
@@ -7,9 +8,9 @@ with the pet. Player can check status of pet at anytime to keep track of
  pet's status.
 
 What player can do:
-- Start the game by hatching a random pet.
-- Check pet's status:  name, birth date, hunger level, happiness level,
-health level, health status.
+- Start the game by hatching a random pet. (Teemo, Yuumi, Fizz)
+- Check pet's status:  name, birth date, hunger level(/100), happiness
+level(/100), health level(/100), health status(Healthy/Sick).
 - Feed pet: provide pet with three kinds of food. Note: different pet
 has different favorite food which restores more hunger stats!
 - Provide medicine: provide medicine to restore pet's health.
