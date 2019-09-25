@@ -2,8 +2,16 @@ import random
 
 
 class Mini_games:
+    """
+    Static class that represents mini games. Each static methods
+    represent operation of each game.
+    """
     @staticmethod
     def rock_paper_scissors():
+        """
+        Simulates a rock per and scissors game between player and pet.
+        Randomly provides pet's behaviour.
+        """
         options = ["Rock", "Paper", "Scissors"]
         print('Let\'s play some rock, paper and scissors!')
         pet_play = options[random.randint(0, 2)]
@@ -32,6 +40,10 @@ class Mini_games:
 
     @staticmethod
     def hide_and_seek():
+        """
+        Simulates a hide and seek game between player and pet.
+        Prints out game results randomly.
+        """
         game_result = random.randint(0, 2)
         if game_result == 1:
             print('You found your pet hidden in a bush!')

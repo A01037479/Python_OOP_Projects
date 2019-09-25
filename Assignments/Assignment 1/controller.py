@@ -4,8 +4,16 @@ from game import Game
 
 
 class Controller:
+    """
+    Controller is the highest level class of the project. It controls
+    game by starting, restarting, proceeding and ending it.
+    """
     @staticmethod
     def start_game():
+        """
+        The method starts the game, provides users with option to
+        hatch an egg or quit game
+        """
         print('Welcome to Tamagotchi League of Legends edition!')
         while 1:
             print('Would you like to start hatching an egg now?')
@@ -22,6 +30,10 @@ class Controller:
 
     @staticmethod
     def proceed_game():
+        """
+        The method proceeds the game after creating a pet object.
+        provides player with a menu.
+        """
         pet_name = Game.pet.get_name()
         continue_game = True
         while continue_game:
@@ -48,6 +60,10 @@ class Controller:
 
     @staticmethod
     def restart_game():
+        """
+        The method is called when pet is dead and user can choose to
+        restart game.
+        """
         user_input = input(f'{Game.pet.get_name()} has died :( \n'
                            f'Would you like to start over '
                            f'and hatch a new egg?\n'

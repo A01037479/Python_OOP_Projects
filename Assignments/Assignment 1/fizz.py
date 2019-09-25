@@ -2,6 +2,10 @@ from pet import Pet
 
 
 class Fizz(Pet):
+    """
+    Fizz class is a sub class of Pet. A Fizz is one species of pets.
+    It inherits all the properties and methods from parent class.
+    """
     def __init__(self):
         super().__init__()
         self.name = 'Fizz'

@@ -3,14 +3,10 @@ from pet import Pet
 
 class Teemo(Pet):
     """
-    Teemo is a child class of Pet class.
-    It is one of the pet species.
+    Teemo class is a sub class of Pet. A Teemo is one species of pets.
+    It inherits all the properties and methods from parent class.
     """
     def __init__(self):
-        """
-        Instantiate a Teemo object, giving it specific properties and
-        inherent from Pet
-        """
         super().__init__()
         self.name = 'Teemo'
         self.health_decline_rate = 2

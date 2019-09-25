@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from teemo import Teemo
 from fizz import Fizz
@@ -9,10 +10,17 @@ import random
 
 
 class Game:
+    """
+    Static class that represents the game. The game provides methods
+    that represents player options.
+    """
     pet = None
 
     @classmethod
     def hatch(cls):
+        """
+        Randomly create a pet object, from Teemo, Fizz or Yuumi
+        """
         hatch_code = random.randint(1, 3)
         if hatch_code == 1:
             cls.pet = Teemo()
@@ -20,18 +28,19 @@ class Game:
             cls.pet = Fizz()
         elif hatch_code == 3:
             cls.pet = Yuumi()
-        """
         i = 0
         while i < 3:
             print('Hatching...')
             time.sleep(1)
             i += 1
-        """
-
         print(f'Congrats, a {cls.pet.get_name()} is born!\n')
 
     @classmethod
     def update_status(cls):
+        """
+        Helper method that is called when an action is done to the pet.
+        It renews pet's status.
+        """
         update_time = datetime.now()
         time_elapsed = (update_time - cls.pet.get_last_checked_time()) \
             .total_seconds()
@@ -49,6 +58,9 @@ class Game:
 
     @classmethod
     def check_status(cls):
+        """
+        The method prints out pet's status at the moment
+        """
         if not cls.update_status():
             return False
         print(f'{cls.pet.get_name()} says:'
@@ -58,6 +70,10 @@ class Game:
 
     @classmethod
     def feed_food(cls):
+        """
+        Takes in user input of food choice from three, and feeds food
+        to the pet to lower its hunger level
+        """
         food_choice = input(f'What food would you like to feed?\n'
                             f' 1. {Food.food_dct["1"]}\n'
                             f' 2. {Food.food_dct["2"]}\n'
@@ -83,6 +99,10 @@ class Game:
 
     @classmethod
     def feed_medicine(cls):
+        """
+        Takes in user input of medicine choice from three, and feeds
+        medicine to the pet to reset its health level back to 100/100
+        """
         medicine_choice = input(f'Which medicine would you choose?\n'
                                 f' 1. {Medicine.medicine_dict["1"]}\n'
                                 f' 2. {Medicine.medicine_dict["2"]}\n'
@@ -101,6 +121,10 @@ class Game:
 
     @classmethod
     def play_mini_game(cls):
+        """
+        Takes in user input of mini game choice from three, and run the
+        game methods to increase pet's happiness level
+        """
         game_choice = input(
             f'What game would you like to play with your'
             f' {cls.pet.get_name()}?\n'

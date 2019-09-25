@@ -3,6 +3,11 @@ from datetime import datetime
 
 
 class Pet(ABC):
+    """
+    Abstract class that is also super class of Teemo, Yuumi, Fizz.
+    It provides properties and structure for its child classes that
+    represent specific species of pets.
+    """
     def __init__(self):
         self.name = None
         self.birth_date = datetime.now()
@@ -66,6 +71,11 @@ class Pet(ABC):
         self.last_checked_time = time
 
     def lower_health(self, time_elapsed):
+        """
+        Decrease pet's health based on elapsed time period. Doubles the
+        decreased amount when pet's hunger level reaches 100/100
+        :param time_elapsed: datetime
+        """
         if self.hunger == 100:
             self.health -= int(int(time_elapsed)
                                * self.health_decline_rate * 2)
@@ -76,36 +86,69 @@ class Pet(ABC):
             self.health = self.valid_stats(self.health)
 
     def gain_hunger(self, time_elapsed):
+        """
+        Increases pet's hunger level based on elapsed time period.
+        :param time_elapsed: datetime
+        """
         self.hunger += int(int(time_elapsed)
                            * self.hunger_increase_rate)
         self.hunger = self.valid_stats(self.hunger)
 
     def lower_happiness(self, time_elapsed):
+        """
+        Decreases pet's happiness level based on elapsed time period.
+        :param time_elapsed: datetime
+        """
         self.happiness -= int(int(time_elapsed)
                               * self.happiness_decline_rate)
         self.happiness = self.valid_stats(self.happiness)
 
     def reset_health(self):
+        """
+        Restores pet's health to 100/100
+        """
         self.health = 100
 
     def gain_happiness(self, amount):
+        """
+        Increases pet's happiness level based on input amount.
+        :param amount: int
+        """
         self.happiness += amount
         self.happiness = self.valid_stats(self.happiness)
 
     def lower_hunger(self, amount):
+        """
+        Decreases pet's hunger level based on input amount.
+        :param amount: int
+        """
         self.hunger -= amount
         self.hunger = self.valid_stats(self.hunger)
 
     def fall_sick(self):
+        """
+        Sets pet to be sick.
+        """
         self.is_sick = True
 
     def recover_health_status(self):
+        """
+        Sets pet to be healthy.
+        """
         self.is_sick = False
 
     def die(self):
+        """
+        Sets pet to be dead
+        :return:
+        """
         self.is_dead = True
 
     def valid_stats(self, stat):
+        """
+        Validation helper function to validate stats level in [0, 100]
+        :param stat: int
+        """
         if stat <= 0:
             stat = 0
         elif stat >= 100:
