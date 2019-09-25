@@ -14,8 +14,13 @@ class Fizz(Pet):
         self.message = {1: 'To the briny deep!',
                         2: 'The mighty shark stalks his prey!',
                         3: 'I\'ll show them a watery grave!',
-                        'after_food_msg': f'nom..nom..I don\'t make request '
-                                          f'but can I have crab meat next time please?',
-                        'after_fav_food_msg': 'I can really eat these fresh crab meat for days!',
-                        'after_game_msg': 'These games are fun, we should play everyday!',
-                        'after_medicine_msg': 'Feeling stronger than ever!'}
+                        'after_food_msg':
+                            f'nom..nom..I don\'t make request '
+                            f'but can I have crab meat next time please?',
+                        'after_fav_food_msg':
+                            'I can really eat these '
+                            'fresh crab meat for days!',
+                        'after_game_msg':
+                            'These games are fun, we should play everyday!',
+                        'after_medicine_msg':
+                            'Feeling stronger than ever!'}

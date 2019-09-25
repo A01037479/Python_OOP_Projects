@@ -8,7 +8,8 @@ class Mini_games:
         print('Let\'s play some rock, paper and scissors!')
         pet_play = options[random.randint(0, 2)]
         player_play = options[int(input("Rock, Paper, Scissors?\n"
-                                        " 1. Rock\n 2. Paper\n 3. Scissors\n  ")) - 1]
+                                        " 1. Rock\n 2. Paper\n "
+                                        "3. Scissors\n  ")) - 1]
         if player_play == pet_play:
             print("Tie!")
         elif player_play == "Rock":

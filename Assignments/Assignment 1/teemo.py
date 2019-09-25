@@ -8,7 +8,8 @@ class Teemo(Pet):
     """
     def __init__(self):
         """
-        Instantiate a Teemo object, giving it specific properties and inherent from Pet
+        Instantiate a Teemo object, giving it specific properties and
+        inherent from Pet
         """
         super().__init__()
         self.name = 'Teemo'
@@ -18,9 +19,14 @@ class Teemo(Pet):
         self.health_standard = 70
         self.happiness_gain_rate = 5
         self.favorite_food = 'Mushroom'
-        self.message = {1: 'Hump, two, three, four!', 2: 'Captain Teemo on duty!',
-                        3: 'Never underestimate the power of the Scout\'s code.',
-                        'after_food_msg': f'Not bad! Can I have some mushrooms too please?',
-                        'after_fav_food_msg': 'Yummy master! Best food ever!',
+        self.message = {1: 'Hump, two, three, four!',
+                        2: 'Captain Teemo on duty!',
+                        3: 'Never underestimate the '
+                           'power of the Scout\'s code.',
+                        'after_food_msg': f'Not bad! Can I have some'
+                                          f' mushrooms too please?',
+                        'after_fav_food_msg': 'Yummy master! '
+                                              'Best food ever!',
                         'after_game_msg': 'Fun game! Play more!',
-                        'after_medicine_msg': 'Thank you master, I feel a lot better now!'}
+                        'after_medicine_msg': 'Thank you master, '
+                                              'I feel a lot better now!'}

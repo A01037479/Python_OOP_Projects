@@ -5,7 +5,7 @@ class Food:
 
     @classmethod
     def feed(cls, pet, food_choice):
-        if food_choice == pet.favorite_food:
+        if cls.food_dct[food_choice] == pet.favorite_food:
             pet.lower_hunger(cls.favored_recover_amount)
         else:
             pet.lower_hunger(cls.recover_amount)

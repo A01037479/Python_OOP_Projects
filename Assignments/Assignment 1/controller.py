@@ -44,20 +44,22 @@ class Controller:
                 Controller.end_game()
             else:
                 print('Invalid choice!')
-        Controller.restart()
+        Controller.restart_game()
 
     @staticmethod
-    def restart():
+    def restart_game():
         user_input = input(f'{Game.pet.get_name()} has died :( \n'
-                           f'Would you like to start over and hatch a new egg?\n'
-                           f' 1. Yes, start a new game! \n 2. No, exit game.\n'
+                           f'Would you like to start over '
+                           f'and hatch a new egg?\n'
+                           f' 1. Yes, start a new game! \n'
+                           f' 2. No, exit game.\n'
                            f'  : ')
         if user_input == '1':
             Controller.start_game()
         elif user_input == '2':
-            Controller.restart()
-        else:
             Controller.end_game()
+        else:
+            Controller.restart_game()
 
     @staticmethod
     def end_game():

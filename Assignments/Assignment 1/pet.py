@@ -67,18 +67,22 @@ class Pet(ABC):
 
     def lower_health(self, time_elapsed):
         if self.hunger == 100:
-            self.health -= int(int(time_elapsed) * self.health_decline_rate * 2)
+            self.health -= int(int(time_elapsed)
+                               * self.health_decline_rate * 2)
             self.health = self.valid_stats(self.health)
         else:
-            self.health -= int(int(time_elapsed) * self.health_decline_rate)
+            self.health -= int(int(time_elapsed)
+                               * self.health_decline_rate)
             self.health = self.valid_stats(self.health)
 
     def gain_hunger(self, time_elapsed):
-        self.hunger += int(int(time_elapsed) * self.hunger_increase_rate)
+        self.hunger += int(int(time_elapsed)
+                           * self.hunger_increase_rate)
         self.hunger = self.valid_stats(self.hunger)
 
     def lower_happiness(self, time_elapsed):
-        self.happiness -= int(int(time_elapsed) * self.happiness_decline_rate)
+        self.happiness -= int(int(time_elapsed)
+                              * self.happiness_decline_rate)
         self.happiness = self.valid_stats(self.happiness)
 
     def reset_health(self):
@@ -109,9 +113,11 @@ class Pet(ABC):
         return stat
 
     def __str__(self):
-        return (f'Pet name:         {self.__class__.__name__}\n'
-                f'Birth date:       {self.birth_date.strftime("%b %d %Y %H:%M:%S")}\n'
+        return (f'Pet name:         {self.get_name()}\n'
+                f'Birth date:       '
+                f'{self.birth_date.strftime("%b %d %Y %H:%M:%S")}\n'
                 f'Hunger level:     {self.hunger}/100\n'
                 f'Happiness level:  {self.happiness}/100\n'
                 f'Health level:     {self.health}/100\n'
-                f'Health status:    {"Sick" if self.is_sick else "Healthy"}\n')
+                f'Health status:    '
+                f'{"Sick" if self.is_sick else "Healthy"}\n')

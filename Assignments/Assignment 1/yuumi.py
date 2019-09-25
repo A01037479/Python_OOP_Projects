@@ -11,11 +11,19 @@ class Yuumi(Pet):
         self.health_standard = 50
         self.happiness_gain_rate = 10
         self.favorite_food = 'Chicken'
-        self.message = {1: 'Who\'s ready to risk our lives, defeat our foes, and maybe knock over some cups?',
-                        2: 'Tell me the game plan again. Wait. Fish! Someone has fish! Where is it?',
-                        3: 'Cats make great companions! Just ask my master...'
-                           ' who disappeared under mysterious circumstances.',
-                        'after_food_msg': f'nom..nom..nom. We reaaaaly need to get chicken on our menu too!',
-                        'after_fav_food_msg': 'Yum.. My master knows me the best!',
-                        'after_game_msg': 'Woohoo! Yuumi not bored anymore!',
-                        'after_medicine_msg': 'Thank you master, next time I\'ll heal you!'}
+        self.message = {1: 'Who\'s ready to risk our lives, defeat our'
+                           ' foes, and maybe knock over some cups?',
+                        2: 'Tell me the game plan again. Wait. Fish! '
+                           'Someone has fish! Where is it?',
+                        3: 'Cats make great companions! Just ask '
+                           'my master... who disappeared under mys'
+                           'terious circumstances.',
+                        'after_food_msg':
+                            f'nom..nom..nom. We reaaaaly need'
+                            f' to get chicken on our menu too!',
+                        'after_fav_food_msg':
+                            'Yum.. My master knows me the best!',
+                        'after_game_msg':
+                            'Woohoo! Yuumi not bored anymore!',
+                        'after_medicine_msg':
+                            'Thank you master, next time I\'ll heal you!'}

@@ -1,0 +1,18 @@
+Overview:
+The game is like a Tamagotchi game.
+Player gets to randomly hatch a pet out of three possible species from
+an egg. As time goes on, player's responsibilities are to interact with
+the pet through feeding food, providing medicines and playing mini-games
+with the pet. Player can check status of pet at anytime to keep track of
+ pet's status.
+
+What player can do:
+- Start the game by hatching a random pet.
+- Check pet's status:  name, birth date, hunger level, happiness level,
+health level, health status.
+- Feed pet: provide pet with three kinds of food. Note: different pet
+has different favorite food which restores more hunger stats!
+- Provide medicine: provide medicine to restore pet's health.
+- Play mini-games: play rock, paper and scissors, and hide and seek with
+the pet to increase pet's happiness.
+- Restart game by hatching a new pet after a pet dies.

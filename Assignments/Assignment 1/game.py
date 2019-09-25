@@ -33,7 +33,8 @@ class Game:
     @classmethod
     def update_status(cls):
         update_time = datetime.now()
-        time_elapsed = (update_time - cls.pet.get_last_checked_time()).total_seconds()
+        time_elapsed = (update_time - cls.pet.get_last_checked_time()) \
+            .total_seconds()
         cls.pet.lower_happiness(time_elapsed)
         cls.pet.lower_health(time_elapsed)
         cls.pet.gain_hunger(time_elapsed)
@@ -42,63 +43,83 @@ class Game:
         if cls.pet.get_health() == 0:
             cls.pet.die()
         cls.pet.set_last_checked_time(update_time)
-
         if Game.pet.get_is_dead():
             return False
-
         return True
 
     @classmethod
     def check_status(cls):
         if not cls.update_status():
             return False
-        print(f'{cls.pet.get_name()} says: {cls.pet.get_message()[random.randint(1, 3)]}\n')
+        print(f'{cls.pet.get_name()} says:'
+              f' {cls.pet.get_message()[random.randint(1, 3)]}\n')
         print(cls.pet)
         return True
 
     @classmethod
     def feed_food(cls):
         food_choice = input(f'What food would you like to feed?\n'
-                            f' 1. Mushroom\n'
-                            f' 2. Crab Meat\n'
-                            f' 3. Chicken\n'
+                            f' 1. {Food.food_dct["1"]}\n'
+                            f' 2. {Food.food_dct["2"]}\n'
+                            f' 3. {Food.food_dct["3"]}\n'
                             f'  :')
         if not cls.update_status():
             return False
         if int(food_choice) in range(1, 4):
-            Food.feed(cls.pet, Food.food_dct[food_choice])
+            Food.feed(cls.pet, food_choice)
             if Food.food_dct[food_choice] == cls.pet.get_favorite_food():
-                print(f'{cls.pet.get_name()} says: {cls.pet.get_message()["after_fav_food_msg"]}'
-                      f' (pet hunger level is now {cls.pet.get_hunger()}/100)\n')
+                print(f'{cls.pet.get_name()} says: '
+                      f'{cls.pet.get_message()["after_fav_food_msg"]}'
+                      f' (pet hunger level is now '
+                      f'{cls.pet.get_hunger()}/100)\n')
             else:
-                print(f'{cls.pet.get_name()} says: {cls.pet.get_message()["after_food_msg"]}'
-                      f' (pet hunger level is now {cls.pet.get_hunger()}/100)\n')
+                print(f'{cls.pet.get_name()} says: '
+                      f'{cls.pet.get_message()["after_food_msg"]}'
+                      f' (pet hunger level is now '
+                      f'{cls.pet.get_hunger()}/100)\n')
         else:
-            print(f'No such food option!')
+            print(f'No such food option!\n')
         return True
 
     @classmethod
     def feed_medicine(cls):
+        medicine_choice = input(f'Which medicine would you choose?\n'
+                                f' 1. {Medicine.medicine_dict["1"]}\n'
+                                f' 2. {Medicine.medicine_dict["2"]}\n'
+                                f' 3. {Medicine.medicine_dict["3"]}\n'
+                                f'  :')
         if not cls.update_status():
             return False
-        Medicine.feed(cls.pet)
-        print(f'{cls.pet.get_name()} says: {cls.pet.get_message()["after_medicine_msg"]}'
-              f' (pet health is now 100/100)\n')
+        if medicine_choice in ['1', '2', '3']:
+            Medicine.feed(cls.pet)
+            print(f'{cls.pet.get_name()} says: '
+                  f'{cls.pet.get_message()["after_medicine_msg"]}'
+                  f' (pet health is now 100/100)\n')
+        else:
+            print('No such medicine choice!\n')
         return True
 
     @classmethod
     def play_mini_game(cls):
-        game_choice = input(f'What game would you like to play with your {cls.pet.get_name()}?\n'
-                            f' 1. Rock, paper and scissors\n'
-                            f' 2. Hide and seek\n'
-                            f'  :')
+        game_choice = input(
+            f'What game would you like to play with your'
+            f' {cls.pet.get_name()}?\n'
+            f' 1. Rock, paper and scissors\n'
+            f' 2. Hide and seek\n'
+            f'  :')
         if game_choice == '1':
             Mini_games.rock_paper_scissors()
-        else:
+            print(f'{cls.pet.get_name()} says: '
+                  f'{cls.pet.get_message()["after_game_msg"]}'
+                  f'(pet happiness is now {cls.pet.get_happiness()}/100)\n')
+        elif game_choice == '2':
             Mini_games.hide_and_seek()
+            print(f'{cls.pet.get_name()} says: '
+                  f'{cls.pet.get_message()["after_game_msg"]}'
+                  f'(pet happiness is now {cls.pet.get_happiness()}/100)\n')
+        else:
+            print('No such game option!\n')
         if not cls.update_status():
             return False
         cls.pet.gain_happiness(cls.pet.get_happiness_gain_rate())
-        print(f'{cls.pet.get_name()} says: {cls.pet.get_message()["after_game_msg"]}'
-              f'(pet happiness is now {cls.pet.get_happiness()}/100)\n')
         return True
