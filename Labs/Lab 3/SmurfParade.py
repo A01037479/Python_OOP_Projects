@@ -168,6 +168,7 @@ def main():
           f'How many smurf B are there?            {smurfs.count(smurf_b)}')
     print(f'Which smurf has index of 2 in parade?  {smurfs[2]}')
     print(f'What index does Smurf D have?          {smurfs.index(smurf_c)}')
+    print(f'Smurfs decide to reverse parade:')
     for smurf in reversed(smurfs):
         print(smurf)
 
