@@ -9,8 +9,8 @@ class Teemo(Pet):
     def __init__(self):
         super().__init__()
         self.name = 'Teemo'
-        self.health_decline_rate = 2
-        self.hunger_increase_rate = 1
+        self.health_decline_rate = 0.2
+        self.hunger_increase_rate = 0.5
         self.happiness_decline_rate = 0.5
         self.health_standard = 70
         self.happiness_gain_rate = 5

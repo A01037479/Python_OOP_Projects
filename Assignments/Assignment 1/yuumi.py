@@ -9,9 +9,9 @@ class Yuumi(Pet):
     def __init__(self):
         super().__init__()
         self.name = 'Yuumi'
-        self.health_decline_rate = 4
-        self.hunger_increase_rate = 0.8
-        self.happiness_decline_rate = 0.6
+        self.health_decline_rate = 0.3
+        self.hunger_increase_rate = 0.4
+        self.happiness_decline_rate = 0.3
         self.health_standard = 50
         self.happiness_gain_rate = 10
         self.favorite_food = 'Chicken'

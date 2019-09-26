@@ -9,9 +9,9 @@ class Fizz(Pet):
     def __init__(self):
         super().__init__()
         self.name = 'Fizz'
-        self.health_decline_rate = 3
-        self.hunger_increase_rate = 1.5
-        self.happiness_decline_rate = 1
+        self.health_decline_rate = 0.5
+        self.hunger_increase_rate = 0.6
+        self.happiness_decline_rate = 0.5
         self.health_standard = 60
         self.happiness_gain_rate = 8
         self.favorite_food = 'Crab meat'
