@@ -93,19 +93,23 @@ class smurf_parade:
 def main():
     smurf_a = node('smurf A', None)
     smurf_b = node('smurf B', None)
+    smurf_b2 = node('smurf B', None)
     smurf_c = node('smurf C', None)
     smurf_d = node('smurf D', None)
     smurfs = smurf_parade(smurf_a)
     smurfs.append(smurf_b)
     smurfs.append(smurf_c)
     smurfs.append(smurf_d)
-    print(f'There are {len(smurfs)} smurfs in the parade. They are:')
+    smurfs.append(smurf_b2)
+    print(f'There are {len(smurfs)} smurfs in the parade. '
+          f'\nThey are:')
     for smurf in smurfs:
         print(smurf)
-    print(f'Is smurf B in the parade?: {smurfs.__contains__(smurf_b)}\n'
-          f'How many smurf B are there? {smurfs.count(smurf_b)}')
-    print(f'Which smurf is the 3rd smurf in parade? {smurfs[2]}')
-    print(f'Smurf D is the {smurfs.index(smurf_c)}th in the parade.')
+    print(f'Is smurf B in the parade?:             '
+          f'{smurfs.__contains__(smurf_b)}\n'
+          f'How many smurf B are there?            {smurfs.count(smurf_b)}')
+    print(f'Which smurf has index of 2 in parade?  {smurfs[2]}')
+    print(f'What index does Smurf D have?          {smurfs.index(smurf_c)}')
 
 
 if __name__ == '__main__':
