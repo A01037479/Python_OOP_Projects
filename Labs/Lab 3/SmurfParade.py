@@ -87,7 +87,19 @@ class smurf_parade:
             current = current.next
 
     def __reversed__(self):
-        current = self.head
+        if self.head is None or self.head.next is None:
+            return smurf_parade(self.head)
+        new_head = self.head
+        current_node = new_head
+        prev_node = None
+        while current_node is not None:
+            next_node = current_node.next
+            current_node.next = prev_node
+            prev_node = current_node
+            current_node = next_node
+        new_head = prev_node
+
+        return smurf_parade(new_head)
 
 
 def main():
@@ -110,6 +122,8 @@ def main():
           f'How many smurf B are there?            {smurfs.count(smurf_b)}')
     print(f'Which smurf has index of 2 in parade?  {smurfs[2]}')
     print(f'What index does Smurf D have?          {smurfs.index(smurf_c)}')
+    for smurf in smurfs.__reversed__():
+        print(smurf)
 
 
 if __name__ == '__main__':
