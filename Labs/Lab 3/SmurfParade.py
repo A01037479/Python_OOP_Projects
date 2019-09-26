@@ -1,5 +1,8 @@
 class node:
-
+    """
+    Class represents node that contains string type data and a pointer that
+    points to another node
+    """
     def __init__(self, data, next_node):
         self._data = data
         self._next_node = next_node
@@ -21,20 +24,35 @@ class node:
     data = property(get_data, set_data)
 
     def __str__(self):
+        """
+        returns String representation to print out data of a node
+        :return: String
+        """
         return f'{self.data}'
 
 
 class smurf_parade:
+    """
+    A linked list that contains a head node
+    """
     def __init__(self, head):
         self.head = head
 
     def append(self, item):
+        """
+        Appends a node to the end of the trailing node
+        :param item: Node
+        """
         current = self.head
         while current.next is not None:
             current = current.next
         current.set_next(item)
 
     def __len__(self):
+        """
+        Measures the number of nodes in the linked list
+        :return: Int
+        """
         count = 0
         current = self.head
         while current is not None:
@@ -43,6 +61,11 @@ class smurf_parade:
         return count
 
     def __contains__(self, item):
+        """
+        Checks if the linked list contains a specific node
+        :param item: Node
+        :return: Boolean
+        """
         current = self.head
         while current is not None:
             if item.data == current.data:
@@ -51,6 +74,10 @@ class smurf_parade:
         return False
 
     def __iter__(self):
+        """
+        Makes the linked list iterable
+        :return: smurf_list
+        """
         smurf_list = []
         current = self.head
         while current is not None:
@@ -59,6 +86,11 @@ class smurf_parade:
         return iter(smurf_list)
 
     def __getitem__(self, key):
+        """
+        Checks and returns a node at index of key
+        :param key: int
+        :return: Node
+        """
         current = self.head
         count = 0
         while current is not None:
@@ -69,6 +101,11 @@ class smurf_parade:
         return False
 
     def count(self, item):
+        """
+        Measures and returns the number of times the data of a node appears
+        :param item: Node
+        :return: int
+        """
         current = self.head
         count = 0
         while current is not None:
@@ -78,6 +115,11 @@ class smurf_parade:
         return count
 
     def index(self, item):
+        """
+        Checks and returns the index of a node that's in the linked list
+        :param item: Node
+        :return: int
+        """
         current = self.head
         count = 0
         while current is not None:
@@ -87,6 +129,10 @@ class smurf_parade:
             current = current.next
 
     def __reversed__(self):
+        """
+        Creates a new linked list that is reversed of the linked list
+        :return: smurf_parade
+        """
         if self.head is None or self.head.next is None:
             return smurf_parade(self.head)
         new_head = self.head
@@ -118,11 +164,11 @@ def main():
     for smurf in smurfs:
         print(smurf)
     print(f'Is smurf B in the parade?:             '
-          f'{smurfs.__contains__(smurf_b)}\n'
+          f'{smurf_b in smurfs}\n'
           f'How many smurf B are there?            {smurfs.count(smurf_b)}')
     print(f'Which smurf has index of 2 in parade?  {smurfs[2]}')
     print(f'What index does Smurf D have?          {smurfs.index(smurf_c)}')
-    for smurf in smurfs.__reversed__():
+    for smurf in reversed(smurfs):
         print(smurf)
 
 
