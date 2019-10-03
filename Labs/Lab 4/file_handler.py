@@ -32,10 +32,3 @@ class InvalidFileTypeError(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-
-def main():
-    print(FileHandler.load_data('data.json', FileExtensions.json))
-
-
-if __name__ == '__main__':
-    main()
