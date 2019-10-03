@@ -10,6 +10,8 @@ class FileExtensions(enum.Enum):
 class FileHandler:
     @staticmethod
     def load_data(path, file_extension):
+        if not isinstance(path, str):
+            raise TypeError('Invalid file path type!')
         if not Path(path).exists():
             raise FileNotFoundError('File path could not be found!')
         if file_extension == FileExtensions.json.value \
@@ -19,7 +21,7 @@ class FileHandler:
             file_object.close()
             return content
         else:
-            raise InvalidFileTypeError('Invalid file extension type!')
+            raise InvalidFileTypeError('File extension should be .txt or .json')
 
     @staticmethod
     def write_line(path, lines):

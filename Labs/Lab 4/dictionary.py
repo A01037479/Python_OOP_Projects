@@ -1,3 +1,5 @@
+import sys
+
 from file_handler import FileExtensions, FileHandler, InvalidFileTypeError
 from pathlib import PurePosixPath
 import json
@@ -11,12 +13,39 @@ class Dictionary:
         return self.dict
 
     def load_dictionary(self, path):
-        file_extension = PurePosixPath(path).suffix
-        json_string = FileHandler.load_data(path, file_extension)
-        self.dict = json.loads(json_string)
+        try:
+            file_extension = PurePosixPath(path).suffix
+            json_string = FileHandler.load_data(path, file_extension)
+            self.dict = json.loads(json_string)
+        except FileNotFoundError as e:
+            print(f'FileNotFoundError caught! {e}')
+        except InvalidFileTypeError as e:
+            print(f'InvalidFileTypeError caught! {e}')
+        except TypeError as e:
+            print(f'TypeError caught! {e}')
+        except json.decoder.JSONDecodeError:
+            print(f"Wrong format dictionary. Has to be JSON.")
 
     def query_definition(self, word):
-        definition = self.dict[word]
+        try:
+            definition = self.dict[word]
+        except KeyError:
+            try:
+                definition = self.dict[word.lower()]
+            except KeyError:
+                try:
+                    definition = self.dict[word.upper()]
+                except KeyError:
+                    print('no match word!')
+                else:
+                    self.print_and_write(word, definition)
+            else:
+                self.print_and_write(word, definition)
+        else:
+            self.print_and_write(word, definition)
+
+    @staticmethod
+    def print_and_write(word, definition):
         print(definition)
         formatted_definition = f'{word}: {definition}\n'
         FileHandler.write_line('definitions.txt', formatted_definition)
@@ -28,23 +57,20 @@ class Dictionary:
 def main():
     dictionary = Dictionary()
     path = "data.json"
-    try:
-        dictionary.load_dictionary(path)
-    except FileNotFoundError as e:
-        print(f'FileNotFoundError caught! {e}')
-    except InvalidFileTypeError as e:
-        print(f'InvalidFileTypeError caught! {e}')
+    dictionary.load_dictionary(path)
+    if dictionary.is_loaded():
+        print("dictionary loaded!")
     else:
-        go = True
-        while go:
-            word = input('Enter a word: ')
-            if word == 'exitprogram':
-                go = False
-            if word not in dictionary.get_dict().keys():
-                print('No such word in dictionary.\n')
-                continue
-            else:
-                print(dictionary.query_definition(word))
+        print("Unable to load dictionary")
+        sys.exit()
+
+    go = True
+    while go:
+        word = input('Enter a word: ')
+        if not word == 'exitprogram':
+            dictionary.query_definition(word)
+            continue
+        go = False
 
 
 if __name__ == '__main__':
