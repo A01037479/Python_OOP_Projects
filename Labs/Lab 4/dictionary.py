@@ -1,5 +1,5 @@
 import sys
-
+from difflib import get_close_matches
 from file_handler import FileExtensions, FileHandler, InvalidFileTypeError
 from pathlib import PurePosixPath
 import json
@@ -22,9 +22,9 @@ class Dictionary:
         except InvalidFileTypeError as e:
             print(f'InvalidFileTypeError caught! {e}')
         except TypeError as e:
-            print(f'TypeError caught! {e}')
+            print(f'TypeError caught! File name should be {e}')
         except json.decoder.JSONDecodeError:
-            print(f"Wrong format dictionary. Has to be JSON.")
+            print(f"Wrong format dictionary! Content has to be JSON.")
 
     def query_definition(self, word):
         try:
@@ -36,7 +36,12 @@ class Dictionary:
                 try:
                     definition = self.dict[word.upper()]
                 except KeyError:
-                    print('no match word!')
+                    print('No match word!')
+                    close_matches = get_close_matches(word, self.dict.keys())
+                    if close_matches:
+                        print('Closed matches: ')
+                        for x in range(len(close_matches)):
+                            print(f'{x+1}.{close_matches[x]}')
                 else:
                     self.print_and_write(word, definition)
             else:
@@ -59,7 +64,7 @@ def main():
     path = "data.json"
     dictionary.load_dictionary(path)
     if dictionary.is_loaded():
-        print("dictionary loaded!")
+        print("Dictionary loaded!")
     else:
         print("Unable to load dictionary")
         sys.exit()
