@@ -1,3 +1,6 @@
+"""
+
+"""
 import sys
 from difflib import get_close_matches
 from file_handler import FileExtensions, FileHandler, InvalidFileTypeError
@@ -36,12 +39,17 @@ class Dictionary:
                 try:
                     definition = self.dict[word.upper()]
                 except KeyError:
-                    print('No match word!')
-                    close_matches = get_close_matches(word, self.dict.keys())
-                    if close_matches:
-                        print('Closed matches: ')
-                        for x in range(len(close_matches)):
-                            print(f'{x+1}.{close_matches[x]}')
+                    try:
+                        definition = self.dict[word.capitalize()]
+                    except KeyError:
+                        print('No match word!')
+                        close_matches = get_close_matches(word, self.dict.keys())
+                        if close_matches:
+                            print('Closed matches: ')
+                            for x in range(len(close_matches)):
+                                print(f'{x+1}.{close_matches[x]}')
+                    else:
+                        self.print_and_write(word, definition)
                 else:
                     self.print_and_write(word, definition)
             else:
@@ -61,7 +69,8 @@ class Dictionary:
 
 def main():
     dictionary = Dictionary()
-    path = "data.json"
+    path_input = input('Enter file path: ')
+    path = path_input
     dictionary.load_dictionary(path)
     if dictionary.is_loaded():
         print("Dictionary loaded!")

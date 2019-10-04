@@ -25,7 +25,7 @@ class FileHandler:
 
     @staticmethod
     def write_line(path, lines):
-        write_file = open(path, "a")
+        write_file = open(path, "a+")
         write_file.writelines(lines)
         write_file.close()
 
