@@ -1,5 +1,5 @@
 """
-
+This module contains Dictionary class and main method which drives the program
 """
 import sys
 from difflib import get_close_matches
@@ -9,6 +9,10 @@ import json
 
 
 class Dictionary:
+    """
+    The class represents a dictionary. It can load content from a file and
+    provides users with querying definitions
+    """
     def __init__(self):
         self.dict = {}
 
@@ -16,6 +20,12 @@ class Dictionary:
         return self.dict
 
     def load_dictionary(self, path):
+        """
+        The method tries to load content from a specified file path and store
+        into a dictionary. The method will catch a various of exception when
+        they are raised.
+        :param path: String
+        """
         try:
             file_extension = PurePosixPath(path).suffix
             json_string = FileHandler.load_data(path, file_extension)
@@ -30,6 +40,12 @@ class Dictionary:
             print(f"Wrong format dictionary! Content has to be JSON.")
 
     def query_definition(self, word):
+        """
+        The method tries to query a specified word definition from dictionary.
+        The word will be checked in its original input form, all lower case
+        form, all upper case form and capitalized form.
+        :param word: String
+        """
         try:
             definition = self.dict[word]
         except KeyError:
@@ -59,25 +75,36 @@ class Dictionary:
 
     @staticmethod
     def print_and_write(word, definition):
+        """
+        The method prints the dictionary definition of the word. and write it
+        into definition.txt file.
+        :param word: String
+        :param definition: String
+        """
         print(definition)
         formatted_definition = f'{word}: {definition}\n'
         FileHandler.write_line('definitions.txt', formatted_definition)
 
     def is_loaded(self):
+        """
+        Checks if the dictionary is empty
+        :return: bool
+        """
         return self.dict
 
 
 def main():
+    """
+    Drives the program. provides users with options to access dictionary
+    """
     dictionary = Dictionary()
     path_input = input('Enter file path: ')
-    path = path_input
-    dictionary.load_dictionary(path)
+    dictionary.load_dictionary(path_input)
     if dictionary.is_loaded():
         print("Dictionary loaded!")
     else:
         print("Unable to load dictionary")
         sys.exit()
-
     go = True
     while go:
         word = input('Enter a word: ')
