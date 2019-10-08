@@ -25,33 +25,30 @@ class Controller:
 
     @classmethod
     def user_add_card(cls):
-        card_type = input(f' Enter card type:\n'
-                          f' 1. Loyalty Card\n'
-                          f' 2. Membership Card\n'
-                          f' 3. Gift Card\n'
-                          f' 4. Debit Card\n'
-                          f' 5. Credit Card\n'
-                          f' 6. Employee Card\n'
-                          f' 7. Student Card\n'
-                          f'    :')
-        if int(card_type) not in range(1, 8):
+        print('Enter card type:')
+        for key, card_type in CardGenerator.card_types.items():
+            print(f'{key}: {card_type.__name__}')
+        card_type_key = input(': ')
+        if card_type_key not in CardGenerator.card_types.keys():
             return False
         card_name = input(' Enter card name: ')
         card_holder = input(' Enter card holder name: ')
         issued_by = input(' Issued by: ')
-        if int(card_type) in range(5, 8):
+        if CardGenerator.card_types[card_type_key] in \
+                CardGenerator.expirable_card_types:
             issue_date = input(' Enter issue date: ')
             expiry_date = input(' Enter expiry date: ')
-        if card_type == '1':
-            new_card = CardGenerator.create_dedit_card(card_name, card_holder,
-                                                       issued_by)
-        elif card_type == '2':
-
+        if card_type_key == '1':
             new_card = CardGenerator.create_credit_card(card_name, card_holder,
                                                         issued_by, issue_date,
                                                         expiry_date, )
+        elif card_type_key == '2':
+            new_card = CardGenerator.create_dedit_card(card_name, card_holder,
+                                                       issued_by)
+
+
         cls.card_manager.add_card(new_card)
-        cls.card_manager.view_card_by_type('StudentCard')
+        cls.card_manager.view_card_by_type('CreditCard')
 
     @classmethod
     def user_remove_card(cls):
