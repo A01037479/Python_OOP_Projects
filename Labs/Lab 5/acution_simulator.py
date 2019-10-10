@@ -15,9 +15,9 @@ class Auction:
 
         bidding = True
         while bidding:
-            highest_current_bidder = starting_bidder
+            highest_current_bidder = self.auctioneer.highest_current_bidder
             largest_bidder_probability = 0
-            highest_current_bid = 0
+            highest_current_bid = self.auctioneer.highest_current_bid
             bidding = False
             for bidder in self.bidders:
                 bidder(self.auctioneer)
@@ -35,15 +35,12 @@ class Auction:
                     self.bidders[bidders_enough_budget_list.index(True)] \
                     == self.auctioneer.highest_current_bidder:
                 break
-
-
-            if not bidding:
-                break
-            print(
-                f'{highest_current_bidder.name} bidded {highest_current_bid} '
-                f'in response to {self.auctioneer.highest_current_bidder.name}\'s bid of '
-                f'{self.auctioneer.highest_current_bid}!')
-            self.auctioneer.accept_bid(highest_current_bid, highest_current_bidder)
+            if bidding:
+                print(
+                    f'{highest_current_bidder.name} bidded {highest_current_bid} '
+                    f'in response to {self.auctioneer.highest_current_bidder.name}\'s bid of '
+                    f'{self.auctioneer.highest_current_bid}!')
+                self.auctioneer.accept_bid(highest_current_bid, highest_current_bidder)
         print(f'The winner of the auction is: '
               f'{self.auctioneer.highest_current_bidder.name} at '
               f'${self.auctioneer.highest_current_bid}!')
@@ -57,9 +54,9 @@ class Auctioneer:
         self.observers = []
 
     def accept_bid(self, bid, bidder):
-        # self.excute_callbacks()
         self.highest_current_bid = bid
         self.highest_current_bidder = bidder
+        #self.execute_callbacks()
 
     def execute_callbacks(self):
         for observer in self.observers:
