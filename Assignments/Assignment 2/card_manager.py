@@ -11,6 +11,10 @@ class CardManager:
     def remove_card(self, card):
         self.cards.remove(card)
 
+    def view_all_cards(self):
+        for card in self.cards:
+            print(card)
+
     def view_card_by_type(self, card_type):
         for card in self.cards:
             if card.__class__.__name__ == card_type:
