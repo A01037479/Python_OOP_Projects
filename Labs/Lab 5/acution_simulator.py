@@ -1,7 +1,16 @@
+"""
+The module contains classes Auction, Actioneer, and Bidder.
+The program simulates an auction.
+"""
+
 import random
 
 
 class Auction:
+    """
+    Auction contains auctioneer, bidders, bidding item, starting price.
+    It can start an auction.
+    """
     def __init__(self, bidders, item, starting_price):
         self.bidders = bidders
         self.auctioneer = None
@@ -9,6 +18,10 @@ class Auction:
         self.starting_price = starting_price
 
     def start_bid(self):
+        """
+        The method registers bidders to auctioneer and notify bidders to
+        observe auctioneer
+        """
         print('Starting Auction!!\n'
               '------------------')
         starting_bidder = Bidder('Starting Bid', 0, 0, 0, 0)
@@ -27,6 +40,10 @@ class Auction:
             print(f'\nNo one bidded for the item {self.item}\n')
 
     def highest_bids(self):
+        """
+        Creates a comprehension dictionary of bidders and their highest bid.
+        Prints the information in console.
+        """
         print('Highest Bids Per Bidder')
         highest_bids_dict = {bidder: bidder.get_highest_bid() for bidder in
                              self.bidders}
@@ -35,6 +52,10 @@ class Auction:
 
 
 class Auctioneer:
+    """
+    Leads auctions and notifies bidders to react to bids.
+    Records highest bid and bidder.
+    """
     def __init__(self, bidders, highest_current_bid, highest_current_bidder):
         self.bidders = bidders
         self.highest_current_bid = highest_current_bid
@@ -46,16 +67,31 @@ class Auctioneer:
         return self.name
 
     def notify_bidders(self):
+        """
+        The method executes callbacks where the observers are bidders.
+        """
         for observer in self.observers:
             observer(self)
 
     def attach_bidder(self, callback):
+        """
+        The method appends callbacks to the observer list.
+        """
         self.observers.append(callback)
 
     def reset_probability(self):
+        """
+        Randomly generate a probability flag.
+        """
         self.auction_probability = random.random()
 
     def accept_bid(self, bid, bidder):
+        """
+        Records highest bid and bidder each round and notify bidders for
+        next round.
+        :param bid: float
+        :param bidder: Bidder
+        """
         self.highest_current_bid = bid
         self.highest_current_bidder = bidder
         self.reset_probability()
@@ -63,6 +99,10 @@ class Auctioneer:
 
 
 class Bidder:
+    """
+    Bidder has a chance to bid and bid for a price of a percentage increase of
+    previous bid price.
+    """
     def __init__(self, name, budget, bid_probability, bid_increase_perc,
                  highest_bid):
         self.name = name
@@ -72,9 +112,18 @@ class Bidder:
         self.highest_bid = highest_bid
 
     def update_bid_probability(self):
+        """
+        Sets a random probability for bidder to react to bid.
+        """
         self.bid_probability = random.random()
 
     def __call__(self, auctioneer):
+        """
+        Set Bidder object to be callable.
+        Bidders observe Auctionner and check conditions to choose to
+        react to bids.
+        :param auctioneer: Auctioneer
+        """
         self.update_bid_probability()
         if self.bid_increase_perc * auctioneer.highest_current_bid < \
                 self.budget and self is not auctioneer.highest_current_bidder \
@@ -92,6 +141,10 @@ class Bidder:
 
 
 def main():
+    """
+    Main methods drives the program and simulates an auction based on user
+    inputs.
+    """
     restart = True
     while restart:
         bid_item = input('\nEnter bid item: ')
