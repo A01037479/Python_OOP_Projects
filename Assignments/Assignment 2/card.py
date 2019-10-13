@@ -8,7 +8,8 @@ class Card(ABC):
         self.issued_by = issued_by
 
     def __str__(self):
-        return f'{self.card_name}'
+        return f'Card name: {self.card_name}; card holder: {self.card_holder};' \
+               f'issued by: {self.issued_by}.'
 
 class Expirable(ABC):
     def __init__(self, issue_date, expiry_date):
