@@ -43,10 +43,7 @@ class CardManager:
 
     def back_up_data(self, path):
         for card in self.cards:
-            try:
-                FileHandler.write_line(path, str(card))
-            except TypeError as e:
-                print(f'InvalidFileTypeError caught! {e}')
+            FileHandler.write_line(path, str(card))
 
     @staticmethod
     def create_other(card_name, card_holder, issued_by, card_description):
