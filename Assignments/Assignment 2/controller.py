@@ -142,7 +142,7 @@ class Controller:
         elif card_type_key == 6:
             print(' Enter following personal information: ')
             try:
-                age = int(input(' Enter age: '))
+                age = int(input(' Enter age(0-99): '))
             except ValueError:
                 raise InvalidAgeError
             else:
@@ -157,7 +157,7 @@ class Controller:
                 if height < 0:
                     raise InvalidHeightError
 
-            sex = input(' Enter sex: ')
+            sex = input(' Enter sex(male/female): ')
             if sex.lower() not in ['male', 'female']:
                 raise InvalidSexError
 
