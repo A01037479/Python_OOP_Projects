@@ -20,5 +20,5 @@ class FileHandler:
             raise TypeError('Invalid file path type!')
         else:
             write_file = open(path, "a+")
-            write_file.writelines(lines)
+            write_file.writelines(f'{lines}\n')
             write_file.close()

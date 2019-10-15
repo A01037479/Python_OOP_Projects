@@ -4,7 +4,8 @@ import sys
 from card_manager import CardManager
 from card import Expirable, IDCard
 from exception import InvalidCardTypeError, InvalidCardBalanceError, \
-    InvalidDateFormatError, DuplicatedNameError, NameNotFoundError
+    InvalidDateFormatError, DuplicatedNameError, NameNotFoundError, \
+    EmptyCardManagerError, InvalidSexError, InvalidHeightError, InvalidAgeError
 
 
 class Controller:
@@ -45,6 +46,14 @@ class Controller:
                 print(f'DuplicatedNameError caught! {e}')
             except NameNotFoundError as e:
                 print(f'NameNotFoundError caught! {e}')
+            except EmptyCardManagerError as e:
+                print(f'EmptyCardManagerError caught! {e}')
+            except InvalidAgeError as e:
+                print(f'InvalidAgeError caught! {e}')
+            except InvalidHeightError as e:
+                print(f'InvalidHeightError caught! {e}')
+            except InvalidSexError as e:
+                print(f'InvalidSexError caught! {e}')
             except TypeError as e:
                 print(f'InvalidFileTypeError caught! {e}')
 
@@ -72,7 +81,7 @@ class Controller:
 
         card_name = input(' Enter card name: ')
         for card in cls.card_manager.cards:
-            if card_name == card.card_name:
+            if card_name == Controller.card_manager.card_name(card):
                 raise DuplicatedNameError
 
         card_holder = input(' Enter card holder name: ')
@@ -86,14 +95,12 @@ class Controller:
                       Expirable):
             issue_date = input(' Enter issue date(YYYY-MM-DD): ')
             try:
-                issue_date = datetime.datetime.strptime(issue_date,
-                                                        date_format)
+                datetime.datetime.strptime(issue_date, date_format)
             except ValueError:
                 raise InvalidDateFormatError
             expiry_date = input(' Enter expiry date(YYYY-MM-DD): ')
             try:
-                expiry_date = datetime.datetime.strptime(expiry_date,
-                                                         date_format)
+                datetime.datetime.strptime(expiry_date, date_format)
             except ValueError:
                 raise InvalidDateFormatError
 
@@ -102,7 +109,7 @@ class Controller:
 
         if card_type_key == 1:
             reward_type = input(
-                ' Enter reward type(stamps/points/other): ')
+                ' Enter reward type(e.g. stamps/points): ')
             new_card = CardManager.create_reward_card(card_name,
                                                       card_holder,
                                                       issued_by,
@@ -118,13 +125,13 @@ class Controller:
                                                        card_holder,
                                                        issued_by, balance)
         elif card_type_key == 3:
-            membership_level = input(' Enter membership_level: ')
+            membership_level = input(' Enter membership_level(e.g. vip): ')
             new_card = CardManager.create_membership_card \
                 (card_name, card_holder, issued_by, issue_date,
                  expiry_date,
                  membership_level)
         elif card_type_key == 4:
-            bank_info = input(' Enter bank information: ')
+            bank_info = input(' Enter bank information(e.g. address): ')
             new_card = CardManager.create_bank_card(card_name, card_holder,
                                                     issued_by, issue_date,
                                                     expiry_date, bank_info)
@@ -133,7 +140,28 @@ class Controller:
                                                   issued_by, issue_date,
                                                   expiry_date, id_number)
         elif card_type_key == 6:
-            personal_information = input(' Enter personal information: ')
+            print(' Enter following personal information: ')
+            try:
+                age = int(input(' Enter age: '))
+            except ValueError:
+                raise InvalidAgeError
+            else:
+                if age < 0 or age > 100:
+                    raise InvalidAgeError
+
+            try:
+                height = float(input(' Enter height(cm): '))
+            except ValueError:
+                raise InvalidHeightError
+            else:
+                if height < 0:
+                    raise InvalidHeightError
+
+            sex = input(' Enter sex: ')
+            if sex.lower() not in ['male', 'female']:
+                raise InvalidSexError
+
+            personal_information = {'age': age, 'sex': sex, 'height': height}
             new_card = CardManager.create_gov_id_card \
                 (card_name, card_holder, issued_by, issue_date,
                  expiry_date, id_number, personal_information)
@@ -145,13 +173,14 @@ class Controller:
 
         cls.card_manager.add_card(new_card)
         print(
-            f'{new_card.card_name} is successfully added to card manager! \n')
+            f'{Controller.card_manager.card_name(new_card)} '
+            f'is successfully added to card manager! \n')
 
     @classmethod
     def user_remove_card(cls):
         card_name = input('Enter card name of the card to be removed: ')
         for card in Controller.card_manager.cards:
-            if card.card_name == card_name:
+            if Controller.card_manager.card_name(card) == card_name:
                 cls.card_manager.remove_card(card)
                 print(f'Card {card_name} removed!\n')
                 return
@@ -159,6 +188,8 @@ class Controller:
 
     @classmethod
     def user_view_all_card(cls):
+        if len(cls.card_manager.cards) == 0:
+            raise EmptyCardManagerError
         cls.card_manager.view_all_cards()
 
     @classmethod
@@ -176,15 +207,19 @@ class Controller:
     def user_search_card(cls):
         card_name = input('Enter the name of the card to be searched: ')
         for card in Controller.card_manager.cards:
-            if card.card_name == card_name:
+            if Controller.card_manager.card_name(card) == card_name:
                 print(card)
                 return
         raise NameNotFoundError
 
     @classmethod
     def user_backup_data(cls):
-        file_path = input('Enter a file path to store card information: ')
+        if len(cls.card_manager.cards) == 0:
+            raise EmptyCardManagerError
+        current_time = datetime.datetime.now().strftime("%d%m%Y_%H%M")
+        file_path = f'CardManager_Export_{current_time}.txt'
         cls.card_manager.back_up_data(file_path)
+        print(f'All data backed up in file path: {file_path}')
 
 
 def main():

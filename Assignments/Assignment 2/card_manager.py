@@ -15,6 +15,9 @@ class CardManager:
     def __init__(self):
         self.cards = []
 
+    def card_name(self, card):
+        return card.get_card_name()
+
     def add_card(self, card):
         self.cards.append(card)
 
@@ -38,8 +41,6 @@ class CardManager:
     def search_card(self, card):
         if card in self.cards:
             print(card)
-        else:
-            print('Card not found')
 
     def back_up_data(self, path):
         for card in self.cards:
