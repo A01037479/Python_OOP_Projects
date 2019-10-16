@@ -178,13 +178,17 @@ class Controller:
 
     @classmethod
     def user_remove_card(cls):
+        found = False
         card_name = input('Enter card name of the card to be removed: ')
         for card in Controller.card_manager.cards:
             if Controller.card_manager.card_name(card) == card_name:
+                found = True
                 cls.card_manager.remove_card(card)
                 print(f'Card {card_name} removed!\n')
-                return
-        raise NameNotFoundError
+        if not found:
+            raise NameNotFoundError
+        else:
+            return True
 
     @classmethod
     def user_view_all_card(cls):
@@ -205,12 +209,16 @@ class Controller:
 
     @classmethod
     def user_search_card(cls):
+        found = False
         card_name = input('Enter the name of the card to be searched: ')
         for card in Controller.card_manager.cards:
             if Controller.card_manager.card_name(card) == card_name:
+                found = True
                 print(card)
-                return
-        raise NameNotFoundError
+        if not found:
+            raise NameNotFoundError
+        else:
+            return True
 
     @classmethod
     def user_backup_data(cls):
@@ -220,6 +228,7 @@ class Controller:
         file_path = f'CardManager_Export_{current_time}.txt'
         cls.card_manager.back_up_data(file_path)
         print(f'All data backed up in file path: {file_path}')
+        return True
 
 
 def main():
