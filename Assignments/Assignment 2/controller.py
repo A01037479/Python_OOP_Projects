@@ -261,7 +261,7 @@ class Controller:
         file_path = f'CardManager_Export_{current_time}.txt'
         cls.card_manager.back_up_data(file_path)
         print(f'All data backed up in file path: {file_path}')
-        return True
+        return file_path
 
 
 def main():

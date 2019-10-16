@@ -1,3 +1,4 @@
+import os
 from unittest import TestCase
 from unittest import mock
 from controller import Controller
@@ -203,7 +204,19 @@ class TestController(TestCase):
 
     def test_user_back_up_data(self):
         """
-        Tests user_back_up_card when file is successfully created.
+        Tests user_back_up_card when card manager is empty.
         """
         Controller.card_manager = CardManager()
-        self.assertTrue(Controller.user_backup_data)
+        self.assertRaises(EmptyCardManagerError, Controller.user_backup_data)
+
+    @mock.patch('controller.input', create=True)
+    def test_user_back_up_data_success(self, mocked_input):
+        """
+        Tests user_back_up_card when successfully backed up.
+        """
+        mocked_input.side_effect = ['1', 'Starbucks reward card', 'eric',
+                                    'Starbucks', 'points', 'done']
+        Controller.card_manager = CardManager()
+        Controller.user_add_card()
+        file_path = Controller.user_backup_data()
+        self.assertTrue(os.path.exists(file_path))
