@@ -1,3 +1,8 @@
+"""
+The module contains all custom exceptions.
+"""
+
+
 class InvalidCardTypeError(Exception):
     def __init__(self):
         super().__init__('Invalid card type!')

@@ -1,9 +1,15 @@
+"""
+The module contains CardManager class which deals with actions on cards.
+"""
 from file_handler import FileHandler
 from card import Card, Expirable, Other, RewardCard, BalanceCard, \
     MembershipCard, BankCard, IDCard, GovIDCard
 
 
 class CardManager:
+    """
+    CardManager class encapsulates all methods that use cards.
+    """
     card_type_dict = {1: RewardCard, 2: BalanceCard, 3: MembershipCard,
                       4: BankCard, 5: IDCard, 6: GovIDCard,
                       7: Other}
@@ -16,19 +22,39 @@ class CardManager:
         self.cards = []
 
     def card_name(self, card):
+        """
+        Takes in a Card and returns its name.
+        :param card: Card
+        :return: Card
+        """
         return card.get_card_name()
 
     def add_card(self, card):
+        """
+        Appends a Card into Cards dictionary.
+        :param card: Card
+        """
         self.cards.append(card)
 
     def remove_card(self, card):
+        """
+        Removes a Card from Cards dictionary.
+        :param card: Card
+        """
         self.cards.remove(card)
 
     def view_all_cards(self):
+        """
+        Prints all Card objects from Cards dictionary.
+        """
         for card in self.cards:
             print(card)
 
     def view_card_by_type(self, card_type):
+        """
+        Prints all Card objects that are specified type from Cards dictionary.
+        :param card_type: int
+        """
         found = False
         for card in self.cards:
             if card.__class__ == self.card_type_dict[card_type]:
@@ -39,10 +65,17 @@ class CardManager:
                   f'currently in the card manager')
 
     def search_card(self, card):
+        """
+        Searches a card object from Cards dictionary.
+        """
         if card in self.cards:
             print(card)
 
     def back_up_data(self, path):
+        """
+        Prints all Card objects into a file in path.
+        :param path: String
+        """
         for card in self.cards:
             FileHandler.write_line(path, str(card))
 

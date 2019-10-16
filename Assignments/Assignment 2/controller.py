@@ -1,3 +1,7 @@
+"""
+The module contains Controller class that interacts with user and card manger.
+It has main method that drives the program.
+"""
 import datetime
 import sys
 
@@ -9,10 +13,18 @@ from exception import InvalidCardTypeError, InvalidCardBalanceError, \
 
 
 class Controller:
+    """
+    The controller class contains a card manager and make interaction between
+    it and users.
+    """
     card_manager = None
 
     @classmethod
     def start_app(cls):
+        """
+        Starts the application by prompting user menu.
+        Catches all kinds of exceptions if raised.
+        """
         cls.card_manager = CardManager()
         menu_dict = {1: Controller.user_add_card,
                      2: Controller.user_remove_card,
@@ -63,6 +75,9 @@ class Controller:
 
     @classmethod
     def user_add_card(cls):
+        """
+        Prompts for user inputs to create a card and add it to card manager.
+        """
         print('Enter card type:')
 
         for key, card_type in CardManager.card_str_type_dict.items():
@@ -178,6 +193,9 @@ class Controller:
 
     @classmethod
     def user_remove_card(cls):
+        """
+        Prompts for user input to remove a specified card from card manager.
+        """
         found = False
         card_name = input('Enter card name of the card to be removed: ')
         for card in Controller.card_manager.cards:
@@ -192,12 +210,18 @@ class Controller:
 
     @classmethod
     def user_view_all_card(cls):
+        """
+        Prints out all cards information from card manager.
+        """
         if len(cls.card_manager.cards) == 0:
             raise EmptyCardManagerError
         cls.card_manager.view_all_cards()
 
     @classmethod
     def user_view_card(cls):
+        """
+        Prompts for user input and prints certain type of cards.
+        """
         for item in CardManager.card_str_type_dict.items():
             print(f'{item[0]}: {item[1]}')
         try:
@@ -209,6 +233,9 @@ class Controller:
 
     @classmethod
     def user_search_card(cls):
+        """
+        Prompts for user input to search a specified card from card manager.
+        """
         found = False
         card_name = input('Enter the name of the card to be searched: ')
         for card in Controller.card_manager.cards:
@@ -222,6 +249,9 @@ class Controller:
 
     @classmethod
     def user_backup_data(cls):
+        """
+        Backs up all card data from card manager into a txt file.
+        """
         if len(cls.card_manager.cards) == 0:
             raise EmptyCardManagerError
         current_time = datetime.datetime.now().strftime("%d%m%Y_%H%M")

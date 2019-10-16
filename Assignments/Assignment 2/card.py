@@ -1,7 +1,13 @@
+"""
+card module contains all types of card classes.
+"""
 from abc import ABC
 
 
 class Card(ABC):
+    """
+    Card is an abstract class which represents a card's basic information.
+    """
     def __init__(self, card_name, card_holder, issued_by):
         self.card_name = card_name
         self.card_holder = card_holder
@@ -16,6 +22,10 @@ class Card(ABC):
 
 
 class Expirable(ABC):
+    """
+    Expirable is an abstract class which contains date information about
+    expriation.
+    """
     def __init__(self, issue_date, expiry_date):
         self.issue_date = issue_date
         self.expiry_date = expiry_date
@@ -26,6 +36,10 @@ class Expirable(ABC):
 
 
 class Other(Card):
+    """
+    Other represents inherits from Card.
+    It represents any other card type. It contains card description.
+    """
     def __init__(self, card_name, card_holder, issued_by, card_description):
         super().__init__(card_name, card_holder, issued_by)
         self.description = card_description
@@ -35,6 +49,10 @@ class Other(Card):
 
 
 class RewardCard(Card):
+    """
+    RewardCard inherits from Card.
+    It represents reward cards which also contains reward type.
+    """
     def __init__(self, card_name, card_holder, issued_by, reward_type):
         super().__init__(card_name, card_holder, issued_by)
         self.reward_type = reward_type
@@ -44,6 +62,10 @@ class RewardCard(Card):
 
 
 class BalanceCard(Card):
+    """
+    BalanceCard inherits from Card.
+    It represents balance cards which also contains card balance.
+    """
     def __init__(self, card_name, card_holder, issued_by, balance):
         super().__init__(card_name, card_holder, issued_by)
         self.balance = balance
@@ -53,6 +75,11 @@ class BalanceCard(Card):
 
 
 class MembershipCard(Card, Expirable):
+    """
+    MembershipCard inherits from Card and Expirable.
+    It represents membership cards which also contains membership
+    level.
+    """
     def __init__(self, card_name, card_holder, issued_by, issue_date,
                  expiry_date, membership_level):
         Card.__init__(self, card_name, card_holder, issued_by)
@@ -65,6 +92,10 @@ class MembershipCard(Card, Expirable):
 
 
 class BankCard(Card, Expirable):
+    """
+    BankCard inherits from Card and Expirable.
+    It represents bank cards which also contains bank information.
+    """
     def __init__(self, card_name, card_holder, issued_by, issue_date,
                  expiry_date, bank_info):
         Card.__init__(self, card_name, card_holder, issued_by)
@@ -77,6 +108,10 @@ class BankCard(Card, Expirable):
 
 
 class IDCard(Card, Expirable):
+    """
+    IDCard inherits from Card and Expirable.
+    It represents reward cards which also contains a ID number.
+    """
     def __init__(self, card_name, card_holder, issued_by, issue_date,
                  expiry_date, id_number):
         Card.__init__(self, card_name, card_holder, issued_by)
@@ -89,6 +124,9 @@ class IDCard(Card, Expirable):
 
 
 class GovIDCard(IDCard):
+    """
+    RewardCard inherits from IDCard and also contains personal information.
+    """
     def __init__(self, card_name, card_holder, issued_by, issue_date,
                  expiry_date, id_number, personal_information):
         IDCard.__init__(self, card_name, card_holder, issued_by,
