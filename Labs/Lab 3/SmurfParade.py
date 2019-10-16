@@ -1,3 +1,6 @@
+""" module level"""
+
+
 class node:
     """
     Class represents node that contains string type data and a pointer that
@@ -135,7 +138,7 @@ class smurf_parade:
         """
         if self.head is None or self.head.next is None:
             return smurf_parade(self.head)
-        new_head = self.head
+        new_head = node(self.head.data, None)
         current_node = new_head
         prev_node = None
         while current_node is not None:
@@ -170,6 +173,9 @@ def main():
     print(f'What index does Smurf D have?          {smurfs.index(smurf_c)}')
     print(f'Smurfs decide to reverse parade:')
     for smurf in reversed(smurfs):
+        print(smurf)
+    print("-------------")
+    for smurf in smurfs:
         print(smurf)
 
 
