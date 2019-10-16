@@ -95,6 +95,9 @@ class Controller:
             f'Adding a new {CardManager.card_str_type_dict[card_type_key]}: ')
 
         card_name = input(' Enter card name: ')
+        if len(card_name) == 0:
+            print('Card name cannot be empty!\n')
+            return
         for card in cls.card_manager.cards:
             if card_name == Controller.card_manager.card_name(card):
                 raise DuplicatedNameError

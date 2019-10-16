@@ -1,0 +1,21 @@
+---------------------------------Read Me---------------------------------------
+The application serves as a card manager, it lets users store cards by type.
+
+Cards are stored into 7 types:  1. reward card
+                                2. balance card
+                                3. membership card
+                                4. bank card
+                                5. ID card
+                                6. Government ID card
+                                7. Other
+
+User can choose to:             1. add a card
+                                2. remove a card
+                                3. view all cards
+                                4. view cards by type
+                                5. search for a card
+                                6. back up all card information to a txt file
+
+The application handles most edge cases and user input errors. Exceptions are
+designed to be raised when invalid inputs are passed from users.
+Note: The application allows empty user inputs except for card names.
