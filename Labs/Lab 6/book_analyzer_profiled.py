@@ -61,9 +61,8 @@ class BookAnalyzer:
         :param word_list: a sequence of words
         :return: True if not found, false otherwise
         """
-        word_lower = word.lower()
         for a_word in word_list:
-            if word_lower == a_word.lower():
+            if word == a_word.lower():
                 return False
         return True
 
@@ -76,12 +75,13 @@ class BookAnalyzer:
         unique_words = []
         duplicate_words = []
         while temp_text:
-            word = temp_text.pop()
-            if word.lower() not in duplicate_words:
-                if self.is_unique(word, temp_text):
+            word = temp_text.pop().lower()
+            word_lower = word.lower()
+            if word_lower not in duplicate_words:
+                if self.is_unique(word_lower, temp_text):
                     unique_words.append(word)
                 else:
-                    duplicate_words.append(word.lower())
+                    duplicate_words.append(word_lower)
         return unique_words
 
 
