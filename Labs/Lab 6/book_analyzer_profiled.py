@@ -39,9 +39,8 @@ class BookAnalyzer:
         :param word_list: a sequence of words
         :return: True if not found, false otherwise
         """
-        word_lower = word.lower()
         for a_word in word_list:
-            if word_lower == a_word.lower():
+            if word == a_word:
                 return False
         return True
 
@@ -50,17 +49,16 @@ class BookAnalyzer:
         Filters out all the words that only appear once in the text.
         :return: a list of all the unique words.
         """
-        temp_text = self.text
+        temp_text = [word.lower() for word in self.text]
         unique_words = []
         duplicate_words = []
         while temp_text:
             word = temp_text.pop()
-            word_lower = word.lower()
-            if word_lower not in duplicate_words:
+            if word not in duplicate_words:
                 if self.is_unique(word, temp_text):
                     unique_words.append(word)
                 else:
-                    duplicate_words.append(word_lower)
+                    duplicate_words.append(word)
         return unique_words
 
 

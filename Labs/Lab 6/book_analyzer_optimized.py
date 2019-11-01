@@ -36,7 +36,6 @@ class BookAnalyzer:
                 else:
                     self.word_count[filtered_word] += 1
 
-
     def find_unique_words(self):
         """
         Filters out all the words that only appear once in the text.
