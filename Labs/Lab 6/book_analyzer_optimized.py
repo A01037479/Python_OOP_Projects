@@ -17,6 +17,7 @@ class BookAnalyzer:
 
     def __init__(self):
         self.text = None
+        self.word_count = {}
 
     def read_data(self, src="House of Usher.txt"):
         """
@@ -28,40 +29,20 @@ class BookAnalyzer:
         translator = str.maketrans("", "", "".join(self.COMMON_PUNCTUATION))
         with open(src, mode='r', encoding='utf-8') as book_file:
             words = book_file.read().split()
-            self.text = [word.translate(translator) for word in words]
+            for word in words:
+                filtered_word = word.translate(translator).lower()
+                if filtered_word not in self.word_count.keys():
+                    self.word_count[filtered_word] = 1
+                else:
+                    self.word_count[filtered_word] += 1
 
-    @staticmethod
-    def is_unique(word, word_list):
-        """
-        Checks to see if the given word appears in the provided sequence.
-        This check is case in-sensitive.
-        :param word: a string
-        :param word_list: a sequence of words
-        :return: True if not found, false otherwise
-        """
-        word_lower = word.lower()
-        for a_word in word_list:
-            if word_lower == a_word.lower():
-                return False
-        return True
 
     def find_unique_words(self):
         """
         Filters out all the words that only appear once in the text.
         :return: a list of all the unique words.
         """
-        temp_text = self.text
-        unique_words = []
-        duplicate_words = []
-        while temp_text:
-            word = temp_text.pop()
-            word_lower = word.lower()
-            if word_lower not in duplicate_words:
-                if self.is_unique(word, temp_text):
-                    unique_words.append(word)
-                else:
-                    duplicate_words.append(word_lower)
-        return unique_words
+        return [word for word, count in self.word_count.items() if count == 1]
 
 
 def main():
