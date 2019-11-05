@@ -71,10 +71,10 @@ class PizzaCompany:
 
     def check_out_order(self):
         if len(self.pizza_order.cheese) < 1:
-            print('You need to add at least one cheese')
+            print('\nYou need to add at least one cheese to check out!')
             return False
         elif len(self.pizza_order.toppings) < 1:
-            print('You need to add at least one topping')
+            print('\nYou need to add at least one topping to check out!')
             return False
         else:
             print('---------------------------------\nYour receipt: ')

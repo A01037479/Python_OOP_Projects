@@ -63,7 +63,8 @@ class BasePizzaDecorator(Pizza):
                 self.toppings[self.ingredient.name] += 1
         self.add_price(self.ingredient_price)
         print('---------------------------------')
-        print(f'Added one {self.ingredient.name} for '
+        print(f'Added one order of {self.ingredient.name} '
+              f'{type(self.ingredient).__name__} for '
               f'${self.ingredient_price}!\n')
         print('You now have cheese:')
         if len(self.cheese) == 0:
@@ -85,9 +86,11 @@ class BasePizzaDecorator(Pizza):
     def print_receipt(self):
         print('Added Signature crust for $4.99')
         for cheese, amount in self.cheese.items():
-            print(f'Added {amount} x {cheese}')
+            print(f'Added {amount} x {cheese} cheese for '
+                  f'${Cheese[cheese].value} each')
         for topping, amount in self.toppings.items():
-            print(f'Added {amount} x {topping}')
+            print(f'Added {amount} x {topping} topping for '
+                  f'${Topping[topping].value} each')
         print(f'Total comes to ${self.total_price}')
 
 
