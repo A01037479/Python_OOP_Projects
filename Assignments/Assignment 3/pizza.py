@@ -1,8 +1,15 @@
+"""
+The module contains pizza interface, base pizza class, base decorator and
+decorator classes for cheese and toppings
+"""
 import abc
 from ingredient import Cheese, Topping
 
 
 class Pizza(abc.ABC):
+    """
+    Pizza interface. it describes basic behaviours and attributes of a pizza.
+    """
     @abc.abstractmethod
     def __init__(self):
         self.crust = None
@@ -24,7 +31,13 @@ class Pizza(abc.ABC):
 
 
 class BasePizza(Pizza):
+    """
+    Base pizza class. It inherits from pizza interface.
+    """
     def __init__(self):
+        """
+        Instantiates a base pizza with signature crust and starting price 4.99
+        """
         super().__init__()
         self.crust = 'Signature Crust'
         self.total_price = 4.99
@@ -40,8 +53,14 @@ class BasePizza(Pizza):
 
 
 class BasePizzaDecorator(Pizza):
-
+    """
+    Base decorator class. It inherits from pizza interface. Decorates a
+    pizza with an ingredient.
+    """
     def __init__(self, base_pizza):
+        """
+        Instantiates a decorator that contains a pizza object.
+        """
         super().__init__()
         self.ingredient = None
         self.ingredient_price = None
@@ -51,6 +70,10 @@ class BasePizzaDecorator(Pizza):
         self.total_price = base_pizza.total_price
 
     def add_ingredient(self):
+        """
+        Adds the ingredient to the cheese or toppings list of pizza
+        to decorate the pizza object.
+        """
         if isinstance(self.ingredient, Cheese):
             if self.ingredient.name not in self.cheese.keys():
                 self.cheese[self.ingredient.name] = 1
@@ -81,9 +104,17 @@ class BasePizzaDecorator(Pizza):
         print('---------------------------------')
 
     def add_price(self, price):
+        """
+        Adds the price to the total price of pizza object.
+        :param price: int
+        """
         self.total_price += price
 
     def print_receipt(self):
+        """
+        Prints out all the ingredients added and corresponding price.
+        :return:
+        """
         print('Added Signature crust for $4.99')
         for cheese, amount in self.cheese.items():
             print(f'Added {amount} x {cheese} cheese for '
@@ -95,6 +126,9 @@ class BasePizzaDecorator(Pizza):
 
 
 class MozzarellaCheeseDecorator(BasePizzaDecorator):
+    """
+    Mozzarella cheese concrete decorator class. It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Cheese.mozzarella
@@ -102,6 +136,10 @@ class MozzarellaCheeseDecorator(BasePizzaDecorator):
 
 
 class ParmigianoReggianoCheeseDecorator(BasePizzaDecorator):
+    """
+    ParmigianoReggiano cheese concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Cheese.parmigianoreggiano
@@ -109,6 +147,10 @@ class ParmigianoReggianoCheeseDecorator(BasePizzaDecorator):
 
 
 class VeganCheeseDecorator(BasePizzaDecorator):
+    """
+    Vegan cheese concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Cheese.vegan
@@ -116,6 +158,10 @@ class VeganCheeseDecorator(BasePizzaDecorator):
 
 
 class MushroomsDecorator(BasePizzaDecorator):
+    """
+    Mushroom topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.mushrooms
@@ -123,6 +169,10 @@ class MushroomsDecorator(BasePizzaDecorator):
 
 
 class PeppersDecorator(BasePizzaDecorator):
+    """
+    Pepper topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.pepper
@@ -130,6 +180,10 @@ class PeppersDecorator(BasePizzaDecorator):
 
 
 class PineappleDecorator(BasePizzaDecorator):
+    """
+    Pineapple topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.pineapple
@@ -137,6 +191,10 @@ class PineappleDecorator(BasePizzaDecorator):
 
 
 class FreshBasilDecorator(BasePizzaDecorator):
+    """
+    Fresh basil topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.freshBasil
@@ -144,6 +202,10 @@ class FreshBasilDecorator(BasePizzaDecorator):
 
 
 class SpinachDecorator(BasePizzaDecorator):
+    """
+    spinach topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.spinach
@@ -151,6 +213,10 @@ class SpinachDecorator(BasePizzaDecorator):
 
 
 class PepperoniDecorator(BasePizzaDecorator):
+    """
+    Pepperoni topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.pepperoni
@@ -158,6 +224,10 @@ class PepperoniDecorator(BasePizzaDecorator):
 
 
 class BeyondMeatDecorator(BasePizzaDecorator):
+    """
+    Beyond Meat topping concrete decorator class.
+    It inherits from base decorator.
+    """
     def __init__(self, base_pizza):
         super().__init__(base_pizza)
         self.ingredient = Topping.beyondMeat

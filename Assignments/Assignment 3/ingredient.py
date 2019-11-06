@@ -1,3 +1,7 @@
+"""
+This module contains two enum class cheese and topping and their price.
+"""
+
 import enum
 
 

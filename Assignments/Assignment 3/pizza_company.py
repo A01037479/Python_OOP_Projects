@@ -1,3 +1,7 @@
+"""
+This module contains pizza company class and main method that drives the
+ program.
+"""
 from pizza import BasePizza, MozzarellaCheeseDecorator, \
     ParmigianoReggianoCheeseDecorator, VeganCheeseDecorator, \
     MushroomsDecorator, PeppersDecorator, PineappleDecorator, \
@@ -8,6 +12,9 @@ from ingredient import Cheese, Topping
 
 
 class PizzaCompany:
+    """
+    Pizza Company class simulates a pizza shop that make and sell pizza.
+    """
     def __init__(self):
         self.pizza_order = None
         self.cheese_menu = {1: ParmigianoReggianoCheeseDecorator,
@@ -22,6 +29,9 @@ class PizzaCompany:
                              7: BeyondMeatDecorator}
 
     def take_pizza_order(self):
+        """
+        Method prompts menu for customer to select and customize pizza.
+        """
         print('Welcome to Python Pizza Company. All pizza starts '
               'at $4.99. Make your own pizza!')
         self.pizza_order = BasePizza()
@@ -70,6 +80,10 @@ class PizzaCompany:
                 print('\nPlease enter valid choice!')
 
     def check_out_order(self):
+        """
+        Method checks if a pizza is legible for checkout.
+        Checks out pizza by printing receipt.
+        """
         if len(self.pizza_order.cheese) < 1:
             print('\nYou need to add at least one cheese to check out!')
             return False
@@ -84,6 +98,9 @@ class PizzaCompany:
 
 
 def main():
+    """
+    Main method drives the program.
+    """
     pizza_company = PizzaCompany()
     pizza_company.take_pizza_order()
 
