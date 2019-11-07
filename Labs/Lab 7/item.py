@@ -77,7 +77,7 @@ class Book(Item):
     A book class that inherents from Item class
     """
 
-    def __init__(self, title, call_number, author, num_copies):
+    def __init__(self, title, call_number, num_copies, author):
         """
         Initialize an book
         :param title: String
@@ -111,10 +111,10 @@ class DVD(Item):
         :param release_date: String
         :param region_code: String
         """
+        super().__init__(title, call_number, num_copies)
         self.release_date = release_date
         self.region_code = region_code
-        super().__init__(title, call_number, num_copies)
-
+    
     def __str__(self):
         """
         String representation of a DVD
@@ -129,7 +129,7 @@ class Journal(Item):
     A Journal class that inherents from Item class
     """
 
-    def __init__(self, title, call_number, author, num_copies, issue_number,
+    def __init__(self, title, call_number, num_copies, author, issue_number,
                  publisher):
         """
         Initializes a journal

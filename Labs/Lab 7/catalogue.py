@@ -1,5 +1,5 @@
 from difflib import get_close_matches
-from item import Book, DVD, Journal
+from item_factory import ItemGenerator
 
 
 class Catalogue:
@@ -17,16 +17,22 @@ class Catalogue:
         """
         Add items to catalogue
         """
-        item = LibraryItemGenerator.create_item()
-        if not item:
-            return False
-        if item.call_number in self.item_list.keys():
-            print(f'call number {item.call_number} already exists')
-            print('Item not added.')
-            return False
-        if item not in self.item_list.values():
-            self.item_list[item.call_number] = item
-            print('Item added.')
+        item_generator = ItemGenerator()
+        try:
+            item_factory = item_generator.generate_item_factory()
+            item = item_factory.create_item()
+        except AttributeError:
+            print('')
+        else:
+            if not item:
+                return False
+            if item.call_number in self.item_list.keys():
+                print(f'call number {item.call_number} already exists')
+                print('Item not added.')
+                return False
+            if item not in self.item_list.values():
+                self.item_list[item.call_number] = item
+                print('Item added.')
 
     def remove_item(self, call_number):
         """
@@ -70,38 +76,3 @@ class Catalogue:
         for item in self.item_list.values():
             print(item)
 
-
-class LibraryItemGenerator:
-    """
-    A static class that helps generates library items
-    """
-
-    @staticmethod
-    def create_item():
-        """
-        A static method to prompt users information to create items
-        :return: item
-        """
-        item_type = input("Enter item type: ").upper().lower().strip()
-        if item_type in ['book', 'dvd', 'journal']:
-            title = input(f"Enter {item_type} title: ")
-            call_number = input(f"Enter {item_type} call number: ")
-            num_copies = input(f"Enter {item_type} number of copies: ")
-        else:
-            print('invalid item type')
-            return False
-        if item_type == 'book':
-            author = input(f"Enter {item_type} author: ")
-            item = Book(title, call_number, author, num_copies)
-        elif item_type == 'dvd':
-            release_date = input(f"Enter {item_type} release date: ")
-            region_code = input(f"Enter {item_type} region code: ")
-            item = DVD(title, call_number, num_copies, release_date,
-                       region_code)
-        elif item_type == 'journal':
-            author = input(f"Enter {item_type} author: ")
-            issue_number = input(f"Enter {item_type} issue number: ")
-            publisher = input(f"Enter {item_type} publisher: ")
-            item = Journal(title, call_number, author, num_copies,
-                           issue_number, publisher)
-        return item
