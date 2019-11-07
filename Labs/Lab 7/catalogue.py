@@ -29,7 +29,7 @@ class Catalogue:
         :return: True if item founded, False otherwise
         """
         for item in self.item_list:
-            if item.call_number == call_number:
+            if item._call_number == call_number:
                 self.item_list.remove(item)
                 print('Item removed.')
                 return True
@@ -89,7 +89,8 @@ class LibraryItemGenerator:
         elif item_type == 'dvd':
             release_date = input(f"Enter {item_type} release date: ")
             region_code = input(f"Enter {item_type} region code: ")
-            item = DVD(title, call_number, num_copies, release_date, region_code)
+            item = DVD(title, call_number, num_copies, release_date,
+                       region_code)
         elif item_type == 'journal':
             author = input(f"Enter {item_type} author: ")
             issue_number = input(f"Enter {item_type} issue number: ")

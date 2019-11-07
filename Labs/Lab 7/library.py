@@ -18,15 +18,11 @@ class Library:
         :param call_number: A string that uniquely identifies item
         :return: True if item founded, False otherwise
         """
-        i = 0
-        while i < len(self.catalogue.item_list):
-            if self.catalogue.item_list[i].call_number() == call_number \
-                    and self.catalogue.item_list[i].check_availability():
-                self.catalogue.item_list[i].\
-                    num_copies(int(self.catalogue.item_list[i].num_copies) - 1)
+        for item in self.catalogue.item_list:
+            if item.call_number == call_number and item.check_availability():
+                item.num_copies = int(item.num_copies) - 1
                 print('Item checked out!')
                 return True
-            i += 1
         print('Item not found or unavailable.')
         return False
 
@@ -36,13 +32,11 @@ class Library:
         :param call_number:  A string that uniquely identifies item
         :return: True if item founded, False otherwise
         """
-        i = 0
-        while i < len(self.catalogue.item_list):
-            if self.catalogue.item_list[i].call_number() == call_number:
-                self.catalogue.item_list[i].\
-                    num_copies(int(self.catalogue.item_list[i].num_copies) + 1)
+        for item in self.catalogue.item_list:
+            if item.call_number == call_number:
+                item.num_copies = int(item.num_copies) + 1
+                print('Item returned!')
                 return True
-            i += 1
         return False
 
 
