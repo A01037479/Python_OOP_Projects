@@ -67,3 +67,86 @@ class Item:
         """
         return (f' title: {self._title}; call number: {self._call_number};'
                 f' number of copy: {self._num_copies}')
+
+
+class Book(Item):
+    """
+    A book class that inherents from Item class
+    """
+
+    def __init__(self, title, call_number, author, num_copies):
+        """
+        Initialize an book
+        :param title: String
+        :param call_number: String
+        :param author: String
+        :param num_copies: Int
+        """
+        self.author = author
+        super().__init__(title, call_number, num_copies)
+
+    def __str__(self):
+        """
+        String representation of a book
+        :return: String
+        """
+        return f'Item type: book; author: {self.author}; {super().__str__()}'
+
+
+class DVD(Item):
+    """
+    A DVD class that inherents from Item class
+    """
+
+    def __init__(self, title, call_number, num_copies, release_date,
+                 region_code):
+        """
+        Initializes a DVD
+        :param title: String
+        :param call_number: String
+        :param num_copies: Int
+        :param release_date: String
+        :param region_code: String
+        """
+        self.release_date = release_date
+        self.region_code = region_code
+        super().__init__(title, call_number, num_copies)
+
+    def __str__(self):
+        """
+        String representation of a DVD
+        :return: String
+        """
+        return f'Item type: DVD; {super().__str__()}; release_date: ' \
+               f'{self.release_date}; region_code: {self.region_code} '
+
+
+class Journal(Item):
+    """
+    A Journal class that inherents from Item class
+    """
+
+    def __init__(self, title, call_number, author, num_copies, issue_number,
+                 publisher):
+        """
+        Initializes a journal
+        :param title: String
+        :param call_number:String
+        :param author:String
+        :param num_copies:Int
+        :param issue_number:String
+        :param publisher:String
+        """
+        self.author = author
+        self.issue_number = issue_number
+        self.publisher = publisher
+        super().__init__(title, call_number, num_copies)
+
+    def __str__(self):
+        """
+        String representation of a journal
+        :return: String
+        """
+        return f'Item type: Journal; {super().__str__()}; author: ' \
+               f'{self.author}; issue_number: {self.issue_number}; ' \
+               f'publisher: {self.publisher}'

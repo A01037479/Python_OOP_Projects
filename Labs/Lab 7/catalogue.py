@@ -1,7 +1,5 @@
 from difflib import get_close_matches
-from book import Book
-from dvd import DVD
-from journal import Journal
+from item import Book, DVD, Journal
 
 
 class Catalogue:
