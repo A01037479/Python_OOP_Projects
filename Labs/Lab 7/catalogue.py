@@ -6,19 +6,27 @@ class Catalogue:
     """
     A class that represents a catalogue of library, contains a list of items
     """
+
     def __init__(self):
         """
         initializes a catalogue
         """
-        self.item_list = []
+        self.item_list = {}
 
     def add_item(self):
         """
         Add items to catalogue
         """
         item = LibraryItemGenerator.create_item()
-        if item not in self.item_list:
-            self.item_list.append(item)
+        if not item:
+            return False
+        if item.call_number in self.item_list.keys():
+            print(f'call number {item.call_number} already exists')
+            print('Item not added.')
+            return False
+        if item not in self.item_list.values():
+            self.item_list[item.call_number] = item
+            print('Item added.')
 
     def remove_item(self, call_number):
         """
@@ -26,9 +34,9 @@ class Catalogue:
         :param call_number: unique identifier of an item
         :return: True if item founded, False otherwise
         """
-        for item in self.item_list:
-            if item._call_number == call_number:
-                self.item_list.remove(item)
+        for item in self.item_list.values():
+            if item.call_number == call_number:
+                self.item_list.pop(item.call_number)
                 print('Item removed.')
                 return True
         print('Item not found.')
@@ -42,7 +50,7 @@ class Catalogue:
         """
         title_list = []
 
-        for item in self.item_list:
+        for item in self.item_list.values():
             title_list.append(item.get_title())
             if item.get_title() == title:
                 print(f'Item found, {item}')
@@ -51,14 +59,15 @@ class Catalogue:
         if not similar_titles:
             print('Item not found, no similar item found.')
         else:
-            print(f'Item not found, do you mean {str(", ").join(similar_titles)}?')
+            print(
+                f'Item not found, do you mean {str(", ").join(similar_titles)}?')
 
     def display_available_items(self):
         """
         Prints all the items from catalogue
         """
         print('Available items:')
-        for item in self.item_list:
+        for item in self.item_list.values():
             print(item)
 
 
@@ -93,6 +102,6 @@ class LibraryItemGenerator:
             author = input(f"Enter {item_type} author: ")
             issue_number = input(f"Enter {item_type} issue number: ")
             publisher = input(f"Enter {item_type} publisher: ")
-            item = Journal(title, call_number, author, num_copies, issue_number, publisher)
-        print('Item added.')
+            item = Journal(title, call_number, author, num_copies,
+                           issue_number, publisher)
         return item

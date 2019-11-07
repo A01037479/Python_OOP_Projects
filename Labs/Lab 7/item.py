@@ -1,4 +1,7 @@
-class Item:
+import abc
+
+
+class Item(abc.ABC):
     """
     A class that represents an item
     """

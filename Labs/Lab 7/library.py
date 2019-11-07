@@ -18,7 +18,7 @@ class Library:
         :param call_number: A string that uniquely identifies item
         :return: True if item founded, False otherwise
         """
-        for item in self.catalogue.item_list:
+        for item in self.catalogue.item_list.values():
             if item.call_number == call_number and item.check_availability():
                 item.num_copies = int(item.num_copies) - 1
                 print('Item checked out!')
@@ -32,7 +32,7 @@ class Library:
         :param call_number:  A string that uniquely identifies item
         :return: True if item founded, False otherwise
         """
-        for item in self.catalogue.item_list:
+        for item in self.catalogue.item_list.values():
             if item.call_number == call_number:
                 item.num_copies = int(item.num_copies) + 1
                 print('Item returned!')
