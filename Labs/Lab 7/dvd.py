@@ -5,7 +5,8 @@ class DVD(Item):
     """
     A DVD class that inherents from Item class
     """
-    def __init__(self, title, call_number, num_copies, release_date, region_code):
+    def __init__(self, title, call_number, num_copies, release_date,
+                 region_code):
         """
         Initializes a DVD
         :param title: String
@@ -23,5 +24,6 @@ class DVD(Item):
         String representation of a DVD
         :return: String
         """
-        return f'Item type: DVD; {super().__str__()}; release_date: {self.release_date}; region_code: {self.region_code} '
+        return f'Item type: DVD; {super().__str__()}; release_date: ' \
+               f'{self.release_date}; region_code: {self.region_code} '
 

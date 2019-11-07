@@ -28,13 +28,11 @@ class Catalogue:
         :param call_number: unique identifier of an item
         :return: True if item founded, False otherwise
         """
-        i = 0
-        while i < len(self.item_list):
-            if self.item_list[i].call_number() == call_number:
-                self.item_list.remove(self.item_list[i])
+        for item in self.item_list:
+            if item.call_number == call_number:
+                self.item_list.remove(item)
                 print('Item removed.')
                 return True
-            i += 1
         print('Item not found.')
         return False
 
@@ -44,19 +42,17 @@ class Catalogue:
         :param title: title of an item
         :return: True the item if founded
         """
-        i = 0
         title_list = []
-        while i < len(self.item_list):
-            title_list.append(self.item_list[i].get_title())
-            if self.item_list[i].get_title() == title:
-                print(f'Item found, {self.item_list[i]}')
-                return self.item_list[i]
-            i += 1
+
+        for item in self.item_list:
+            title_list.append(item.get_title())
+            if item.get_title() == title:
+                print(f'Item found, {item}')
+                return item
         similar_titles = get_close_matches(title, title_list)
         if not similar_titles:
             print('Item not found, no similar item found.')
         else:
-
             print(f'Item not found, do you mean {str(", ").join(similar_titles)}?')
 
     def display_available_items(self):

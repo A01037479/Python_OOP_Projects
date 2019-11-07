@@ -5,7 +5,8 @@ class Journal(Item):
     """
     A Journal class that inherents from Item class
     """
-    def __init__(self, title, call_number, author, num_copies, issue_number, publisher):
+    def __init__(self, title, call_number, author, num_copies, issue_number,
+                 publisher):
         """
         Initializes a journal
         :param title: String
@@ -25,6 +26,7 @@ class Journal(Item):
         String representation of a journal
         :return: String
         """
-        return f'Item type: Journal; {super().__str__()}; author: {self.author};' \
-               f' issue_number: {self.issue_number}; publisher: {self.publisher}'
+        return f'Item type: Journal; {super().__str__()}; author: ' \
+               f'{self.author}; issue_number: {self.issue_number}; ' \
+               f'publisher: {self.publisher}'
 
