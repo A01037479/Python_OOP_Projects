@@ -56,7 +56,7 @@ class JournalFactory(ItemFactory):
                        publisher=input(f"Enter publisher: "))
 
 
-class ItemGenerator:
+class ItemFactoryGenerator:
     """
     The ItemGenerator is responsible for taking in user choices of item type
     and create corresponding items.
