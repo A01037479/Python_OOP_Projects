@@ -1,3 +1,4 @@
+import ast
 import os
 
 import des
@@ -93,21 +94,34 @@ def setup_request_commandline() -> Request:
 
 
 class Crypto:
+    """
+    Crypto Class contains two chains of handlers for encryption and decrytion.
+    It executes requests from command line to encrypt or decrypt information.
+    """
 
     def __init__(self):
         self.encryption_start_handler = None
         self.decryption_start_handler = None
 
     def execute_request(self, request: Request):
-        self.encryption_start_handler.handle_request(request)
-        self.decryption_start_handler.handle_request(request)
+        if request.encryption_state == CryptoMode.EN:
+            self.encryption_start_handler.handle_request(request)
+        elif request.encryption_state == CryptoMode.DE:
+            self.decryption_start_handler.handle_request(request)
 
 
 class BaseCryptoHandler(abc.ABC):
+    """
+    Abstract class that represents behaviour of a crypto handler.
+    """
     def __init__(self, next_handler=None):
         self.next_handler = next_handler
 
     def set_handler(self, handler):
+        """
+        Sets the next handler.
+        :param handler: BaseCryptoHandler
+        """
         self.next_handler = handler
 
     def handle_request(self, request: Request):
@@ -115,6 +129,10 @@ class BaseCryptoHandler(abc.ABC):
 
 
 class ValidateKeyHandler(BaseCryptoHandler):
+    """
+    Extends from BaseCryptoHandler class
+    Validates key input to check if its length is 8 or 16 or 24.
+    """
     def handle_request(self, request: Request):
         print('Validating key')
         key_length = len(request.key)
@@ -130,22 +148,29 @@ class ValidateKeyHandler(BaseCryptoHandler):
 
 
 class ValidateInputHandler(BaseCryptoHandler):
+    """
+    Extends from BaseCryptoHandler class
+    Validates inputs to check if they have valid inputs.
+    Inputs can only be either file or command line string.
+    Reads a file when valid file input provided.
+    """
     def handle_request(self, request: Request):
         print('Validating string input')
         string_input = request.data_input
         file_input = request.input_file
-        if string_input:
+        if string_input and file_input:
+            print('cannot have both string input and file input')
+            return False
+        if string_input and not len(string_input) == 0:
             print('string input found')
             request.input_content = string_input
             if not self.next_handler:
-                print('end of chain')
                 return True
             return self.next_handler.handle_request(request)
         elif file_input and os.path.exists(file_input):
             print('file input found')
             request.input_content = self.read_file(file_input)
             if not self.next_handler:
-                print('end of chain')
                 return True
             return self.next_handler.handle_request(request)
         else:
@@ -153,48 +178,18 @@ class ValidateInputHandler(BaseCryptoHandler):
             return False
 
     def read_file(self, file):
-        with open(file, 'r') as f:
-            output = f.read()
+        with open(file, 'r') as encrypt_file:
+            output = encrypt_file.read()
         return output
 
 
-# class StringInputHandler(BaseCryptoHandler):
-#     def handle_request(self, request: Request):
-#         print('Validating string input')
-#         string_input = request.data_input
-#         if string_input:
-#             print('string input found')
-#             request.input_content = string_input
-#             if not self.next_handler:
-#                 print('end of chain')
-#                 return True
-#         else:
-#             print('string input is empty')
-#         return self.next_handler.handle_request(request)
-#
-#
-# class FileInputHandler(BaseCryptoHandler):
-#     def handle_request(self, request: Request):
-#         print('Validating file input')
-#         file_input = request.input_file
-#         if file_input is not None and os.path.exists(file_input):
-#             print('file input found')
-#             request.input_content = self.read_file(file_input)
-#             if not self.next_handler:
-#                 print('end of chain')
-#                 return True
-#         else:
-#             print('input is not specified '
-#                   'or file input not valid')
-#         return self.next_handler.handle_request(request)
-#
-#     def read_file(self, file):
-#         with open(file, 'r') as f:
-#             output = f.read()
-#         return output
-
-
 class EncryptionHandler(BaseCryptoHandler):
+    """
+    Extends from BaseCryptoHandler class
+    Validates encryption mode from the request and encrypts a message when
+    the valid input is provided.
+    Default encryption mode is encryotion.
+    """
     def handle_request(self, request: Request):
         encryption_state = request.encryption_state
         if encryption_state in (CryptoMode.EN, None):
@@ -215,6 +210,11 @@ class EncryptionHandler(BaseCryptoHandler):
 
 
 class DecryptionHandler(BaseCryptoHandler):
+    """
+    Extends from BaseCryptoHandler class
+    Validates encryption mode from the request and decrypts a message when
+    the valid input is provided.
+    """
     def handle_request(self, request: Request):
         encryption_state = request.encryption_state
         if encryption_state == CryptoMode.DE:
@@ -227,21 +227,18 @@ class DecryptionHandler(BaseCryptoHandler):
             print('Not decrypt mode')
             return False
 
-    def decrypt(self, key, content):  #content = \x17\xfb\x88\x9e\x87\r:\xbeV@\x9b\xb3!651
+    def decrypt(self, key, content):
         byte_key = key.encode('utf-8')
-        byte_content = content.encode('latin1')
-        print(type(byte_content))
         des_key = des.DesKey(byte_key)
-        return des_key.decrypt(byte_content, padding=True)
-
-    def encrypt(self, key, content):
-        byte_key = key.encode('utf-8')
-        byte_content = content.encode('utf-8')
-        des_key = des.DesKey(byte_key)
-        return des_key.encrypt(byte_content, padding=True)
+        content = ast.literal_eval(content)
+        return des_key.decrypt(content, padding=True)
 
 
 class ValidateOutputHandler(BaseCryptoHandler):
+    """
+    Extends from BaseCryptoHandler class.
+    Validates output methods to check if to print to console or write to file.
+    """
     def handle_request(self, request: Request):
         print('validating output type')
         if request.output in ('print', None):
@@ -260,41 +257,17 @@ class ValidateOutputHandler(BaseCryptoHandler):
             print('invalid output file path')
 
     def write_file(self, content, file):
-        with open(file, 'a+') as f:
+        with open(file, 'w+') as f:
             f.write(f'{content}\n')
 
 
-# class PrintToConsoleHandler(BaseCryptoHandler):
-#     def handle_request(self, request: Request):
-#         print('validating if printing result to console')
-#         if request.output in ('print', None):
-#             print('printing result to console')
-#             print(f'result: {request.result}')
-#             if not self.next_handler:
-#                 return True
-#         else:
-#             print('not printing to console')
-#         return self.next_handler.handle_request(request)
-#
-#
-# class WriteToFileHandler(BaseCryptoHandler):
-#     def handle_request(self, request: Request):
-#         print('validating if writing result to file')
-#         if request.output.lower().endswith('.txt'):
-#             print(f'writing file to file {request.output}')
-#             self.write_file(request.result, request.output)
-#             if not self.next_handler:
-#                 return True
-#         else:
-#             print('not writing file')
-#         return self.next_handler.handle_request(request)
-#
-#     def write_file(self, content, file):
-#         with open(file, 'r') as f:
-#             f.write(content)
-
-
 def main(request: Request):
+    """
+    Main method drives the program.
+    Constructs objects of handlers and makes two chains of handler.
+    Creates a crypto object and simulates executing requests from commandline
+    :param request: Request
+    """
     crypto = Crypto()
     vkh_e = ValidateKeyHandler()
     vih_e = ValidateInputHandler()
