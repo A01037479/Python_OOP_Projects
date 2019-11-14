@@ -199,7 +199,7 @@ class EncryptionHandler(BaseCryptoHandler):
         encryption_state = request.encryption_state
         if encryption_state in (CryptoMode.EN, None):
             print('encrypting')
-            request.result = self.encrypt(request.input_content)
+            request.result = self.encrypt(request.key, request.input_content)
             if not self.next_handler:
                 return True
             return self.next_handler.handle_request(request)
@@ -207,9 +207,11 @@ class EncryptionHandler(BaseCryptoHandler):
             print('Not encrypt mode')
             return False
 
-    def encrypt(self, content):
-        result = content
-        return result
+    def encrypt(self, key, content):
+        byte_key = key.encode('utf-8')
+        byte_content = content.encode('utf-8')
+        des_key = des.DesKey(byte_key)
+        return des_key.encrypt(byte_content, padding=True)
 
 
 class DecryptionHandler(BaseCryptoHandler):
@@ -217,7 +219,7 @@ class DecryptionHandler(BaseCryptoHandler):
         encryption_state = request.encryption_state
         if encryption_state == CryptoMode.DE:
             print('Decrypting')
-            request.result = self.decrypt(request.input_content)
+            request.result = self.decrypt(request.key, request.input_content)
             if not self.next_handler:
                 return True
             return self.next_handler.handle_request(request)
@@ -225,9 +227,18 @@ class DecryptionHandler(BaseCryptoHandler):
             print('Not decrypt mode')
             return False
 
-    def decrypt(self, content):
-        result = content
-        return result
+    def decrypt(self, key, content):  #content = \x17\xfb\x88\x9e\x87\r:\xbeV@\x9b\xb3!651
+        byte_key = key.encode('utf-8')
+        byte_content = content.encode('latin1')
+        print(type(byte_content))
+        des_key = des.DesKey(byte_key)
+        return des_key.decrypt(byte_content, padding=True)
+
+    def encrypt(self, key, content):
+        byte_key = key.encode('utf-8')
+        byte_content = content.encode('utf-8')
+        des_key = des.DesKey(byte_key)
+        return des_key.encrypt(byte_content, padding=True)
 
 
 class ValidateOutputHandler(BaseCryptoHandler):
@@ -253,34 +264,34 @@ class ValidateOutputHandler(BaseCryptoHandler):
             f.write(f'{content}\n')
 
 
-class PrintToConsoleHandler(BaseCryptoHandler):
-    def handle_request(self, request: Request):
-        print('validating if printing result to console')
-        if request.output in ('print', None):
-            print('printing result to console')
-            print(f'result: {request.result}')
-            if not self.next_handler:
-                return True
-        else:
-            print('not printing to console')
-        return self.next_handler.handle_request(request)
-
-
-class WriteToFileHandler(BaseCryptoHandler):
-    def handle_request(self, request: Request):
-        print('validating if writing result to file')
-        if request.output.lower().endswith('.txt'):
-            print(f'writing file to file {request.output}')
-            self.write_file(request.result, request.output)
-            if not self.next_handler:
-                return True
-        else:
-            print('not writing file')
-        return self.next_handler.handle_request(request)
-
-    def write_file(self, content, file):
-        with open(file, 'r') as f:
-            f.write(content)
+# class PrintToConsoleHandler(BaseCryptoHandler):
+#     def handle_request(self, request: Request):
+#         print('validating if printing result to console')
+#         if request.output in ('print', None):
+#             print('printing result to console')
+#             print(f'result: {request.result}')
+#             if not self.next_handler:
+#                 return True
+#         else:
+#             print('not printing to console')
+#         return self.next_handler.handle_request(request)
+#
+#
+# class WriteToFileHandler(BaseCryptoHandler):
+#     def handle_request(self, request: Request):
+#         print('validating if writing result to file')
+#         if request.output.lower().endswith('.txt'):
+#             print(f'writing file to file {request.output}')
+#             self.write_file(request.result, request.output)
+#             if not self.next_handler:
+#                 return True
+#         else:
+#             print('not writing file')
+#         return self.next_handler.handle_request(request)
+#
+#     def write_file(self, content, file):
+#         with open(file, 'r') as f:
+#             f.write(content)
 
 
 def main(request: Request):
