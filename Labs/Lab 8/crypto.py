@@ -97,13 +97,35 @@ class Crypto:
     """
     Crypto Class contains two chains of handlers for encryption and decrytion.
     It executes requests from command line to encrypt or decrypt information.
+    Constructs objects of handlers and makes two chains of handler.
     """
 
     def __init__(self):
-        self.encryption_start_handler = None
-        self.decryption_start_handler = None
+        vkh_e = ValidateKeyHandler()
+        vih_e = ValidateInputHandler()
+        eh_e = EncryptionHandler()
+        voh_e = ValidateOutputHandler()
+        vkh_e.set_handler(vih_e)
+        vih_e.set_handler(eh_e)
+        eh_e.set_handler(voh_e)
+
+        vkh_d = ValidateKeyHandler()
+        vih_d = ValidateInputHandler()
+        dh_d = DecryptionHandler()
+        voh_d = ValidateOutputHandler()
+        vkh_d.set_handler(vih_d)
+        vih_d.set_handler(dh_d)
+        dh_d.set_handler(voh_d)
+
+        self.encryption_start_handler = vkh_e
+        self.decryption_start_handler = vkh_d
 
     def execute_request(self, request: Request):
+        """
+        Executs the request to encrypt and decrypt message from the request
+        object.
+        :param request: Request
+        """
         if request.encryption_state == CryptoMode.EN:
             self.encryption_start_handler.handle_request(request)
         elif request.encryption_state == CryptoMode.DE:
@@ -167,7 +189,8 @@ class ValidateInputHandler(BaseCryptoHandler):
             if not self.next_handler:
                 return True
             return self.next_handler.handle_request(request)
-        elif file_input and os.path.exists(file_input):
+        elif file_input \
+                and not os.stat(file_input).st_size == 0:
             print('file input found')
             request.input_content = self.read_file(file_input)
             if not self.next_handler:
@@ -264,29 +287,10 @@ class ValidateOutputHandler(BaseCryptoHandler):
 def main(request: Request):
     """
     Main method drives the program.
-    Constructs objects of handlers and makes two chains of handler.
-    Creates a crypto object and simulates executing requests from commandline
+    Creates a crypto object and simulates executing requests from commandline.
     :param request: Request
     """
     crypto = Crypto()
-    vkh_e = ValidateKeyHandler()
-    vih_e = ValidateInputHandler()
-    eh_e = EncryptionHandler()
-    voh_e = ValidateOutputHandler()
-    vkh_e.set_handler(vih_e)
-    vih_e.set_handler(eh_e)
-    eh_e.set_handler(voh_e)
-
-    vkh_d = ValidateKeyHandler()
-    vih_d = ValidateInputHandler()
-    dh_d = DecryptionHandler()
-    voh_d = ValidateOutputHandler()
-    vkh_d.set_handler(vih_d)
-    vih_d.set_handler(dh_d)
-    dh_d.set_handler(voh_d)
-
-    crypto.encryption_start_handler = vkh_e
-    crypto.decryption_start_handler = vkh_d
     crypto.execute_request(request)
 
 
