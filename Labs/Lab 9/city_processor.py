@@ -147,7 +147,7 @@ class ISSDataRequest:
                                 params={"lat": city.lat, "lon": city.lng})
         pass_times = response.json()['response']
         city_overhead_times = CityOverheadTimes(city, *pass_times)
-        # jprint(pass_times)
+        jprint(pass_times)
         return city_overhead_times
 
 
