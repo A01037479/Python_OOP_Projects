@@ -100,7 +100,7 @@ def main():
     It instantiates three ProducerThread objects and one ConsumerThread object
     to create multi-threading for the program.
     """
-    db = CityDatabase('city_locations.xlsx')
+    db = CityDatabase('city_locations_test.xlsx')
     cities = db.city_db
     num_cities = len(cities)
     cities1 = cities[0: int(num_cities / 3)]
@@ -109,20 +109,20 @@ def main():
 
     city_overhead_time_queue = CityOverheadTimeQueue()
 
-    pt1 = ProducerThread(cities1, city_overhead_time_queue)
-    pt2 = ProducerThread(cities2, city_overhead_time_queue)
-    pt3 = ProducerThread(cities3, city_overhead_time_queue)
-    ct = ConsumerThread(city_overhead_time_queue)
+    producer_thread1 = ProducerThread(cities1, city_overhead_time_queue)
+    producer_thread2 = ProducerThread(cities2, city_overhead_time_queue)
+    producer_thread3 = ProducerThread(cities3, city_overhead_time_queue)
+    consumer_thread = ConsumerThread(city_overhead_time_queue)
     start_time = datetime.datetime.now()
-    pt1.start()
-    pt2.start()
-    pt3.start()
-    ct.start()
-    pt1.join()
-    pt2.join()
-    pt3.join()
-    ct.set_data_incoming_false()
-    ct.join()
+    producer_thread1.start()
+    producer_thread2.start()
+    producer_thread3.start()
+    consumer_thread.start()
+    producer_thread1.join()
+    producer_thread2.join()
+    producer_thread3.join()
+    consumer_thread.set_data_incoming_false()
+    consumer_thread.join()
     stop_time = datetime.datetime.now()
     duration = stop_time - start_time
     print(duration)
