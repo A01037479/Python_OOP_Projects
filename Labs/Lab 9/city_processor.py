@@ -142,9 +142,11 @@ class ISSDataRequest:
     @classmethod
     def get_overhead_pass(cls, city: City) -> CityOverheadTimes:
         """
-
-        :param city:
-        :return:
+        Method takes a City object and make a get request on latitude and
+        longtitude of the city. Instantiates a CityOverheadTimes object and
+        returns it.
+        :param city: City
+        :return: CityOverHeadTimes
         """
         response = requests.get(cls.OPEN_NOTIFY_OVERHEAD_PASS_URL,
                                 params={"lat": city.lat, "lon": city.lng})
