@@ -94,9 +94,11 @@ def main():
     except FileNotFoundError:
         print('File is not found.')
     except KeyError:
-        print('Invalid garment type and brand name.')
+        print('Invalid garment type or brand name.')
     except ValueError as e:
         print(e)
+    except AttributeError:
+        print('Invalid brand name')
 
 
 if __name__ == '__main__':

@@ -33,8 +33,11 @@ class OrderProcessor:
             yield order
 
     def get_factory(self, brand_type):
-        factory = self.brand_factory_mapper[brand_type]
-        return factory()
+        try:
+            factory = self.brand_factory_mapper[brand_type]
+            return factory()
+        except KeyError:
+            pass
 
     def reformat(self, order_detail):
         formatted_order_detail = {}

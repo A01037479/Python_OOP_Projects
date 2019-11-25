@@ -1,7 +1,8 @@
 from unittest import TestCase
 from pandas import DataFrame
 from order_processor import OrderProcessor, Order
-from garment_abstract_factory import LuluLimeFactory, ShirtMen
+from garment_abstract_factory import LuluLimeFactory, NikaFactory, \
+    PineappleRepublicFactory, ShirtMen, ShirtWomen
 from garment_maker import GarmentMaker
 
 
@@ -25,13 +26,29 @@ class TestOrderProcessor(TestCase):
         next_order = next(order_processor.process_next_order())
         self.assertTrue(self, isinstance(next_order, Order))
 
-    def test_get_factory(self):
+    def test_get_LuluLime_factory(self):
         """
         Tests get_factory method when valid brand option is provided.
         """
         order_processor = OrderProcessor()
         factory = order_processor.get_factory('Lululime')
         self.assertTrue(self, isinstance(factory, LuluLimeFactory))
+
+    def test_get_PineappleRepublic_factory(self):
+        """
+        Tests get_factory method when valid brand option is provided.
+        """
+        order_processor = OrderProcessor()
+        factory = order_processor.get_factory('PineappleRepublic')
+        self.assertTrue(self, isinstance(factory, PineappleRepublicFactory))
+
+    def test_get_Nika_factory(self):
+        """
+        Tests get_factory method when valid brand option is provided.
+        """
+        order_processor = OrderProcessor()
+        factory = order_processor.get_factory('Nika')
+        self.assertTrue(self, isinstance(factory, NikaFactory))
 
     def test_get_factory_invalid(self):
         """
@@ -50,8 +67,26 @@ class TestOrderProcessor(TestCase):
         garment_maker.order_processor = OrderProcessor()
         garment_maker.order_processor.open_order_sheet(
             'COMP_3522_A4_orders.xlsx')
+        # assume first entry from excel sheet is shirt men order
         next_order = next(garment_maker.order_processor.process_next_order())
         garment_maker.shirt_men_maker(next_order)
 
         self.assertTrue(self, isinstance(next(iter(garment_maker.shirts_men)),
                                          ShirtMen))
+
+    def test_shirt_women_maker(self):
+        """
+        Tests if shirt_women_maker method creates an ShirtWomen object and stores
+        it into garment maker.
+        """
+        garment_maker = GarmentMaker()
+        garment_maker.order_processor = OrderProcessor()
+        garment_maker.order_processor.open_order_sheet(
+            'COMP_3522_A4_orders.xlsx')
+        # assume first entry from excel sheet is shirt women order
+        next_order = next(garment_maker.order_processor.process_next_order())
+        garment_maker.shirt_women_maker(next_order)
+
+        self.assertTrue(self,
+                        isinstance(next(iter(garment_maker.shirts_women)),
+                                   ShirtWomen))
