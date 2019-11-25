@@ -10,6 +10,7 @@ class GarmentMaker:
     GarmentMaker creates garments based on orders and stores them.
     It can prints out daily report displaying all the order details.
     """
+
     def __init__(self):
         self.shirts_men = {}
         self.shirts_women = {}
@@ -77,14 +78,23 @@ def main():
     Main method drives the program and simulates some process of making garment
     orders.
     """
-    garment_maker = GarmentMaker()
-    garment_maker.order_processor.open_order_sheet('COMP_3522_A4_orders.xlsx')
+    try:
+        garment_maker = GarmentMaker()
+        file_name = input('OOP Designs Inc. Factory Garment Maker System:'
+                          '\nEnter an excel sheet path: ')
+        garment_maker.order_processor.open_order_sheet(file_name)
 
-    for order in garment_maker.order_processor.process_next_order():
-        garment_type = order.order_detail['garment']
-        garment_maker.maker_mapper[garment_type](order)
+        for order in garment_maker.order_processor.process_next_order():
+            garment_type = order.order_detail['garment']
+            garment_maker.maker_mapper[garment_type](order)
 
-    garment_maker.print_daily_report()
+        garment_maker.print_daily_report()
+    except FileNotFoundError:
+        print('File is not found.')
+    except KeyError:
+        print('Invalid garment type and brand name.')
+    except ValueError as e:
+        print(e)
 
 
 if __name__ == '__main__':

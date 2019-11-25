@@ -2,7 +2,8 @@
 This module contains OrderProcessor that deals with Order objects.
 """
 import pandas as pd
-from garment_abstract_factory import LuluLimeFactory, PineappleRepublicFactory, NikaFactory
+from garment_abstract_factory import LuluLimeFactory, PineappleRepublicFactory, \
+    NikaFactory
 
 
 class OrderProcessor:
@@ -10,6 +11,7 @@ class OrderProcessor:
     OrderProcessor reads from a excel sheet of order details and creates orders.
     It contains a orders dictionary and a mapper to the BrandFactory classes.
     """
+
     def __init__(self):
         self.orders_data_frame = None
         self.brand_factory_mapper = {'Lululime': LuluLimeFactory,
@@ -31,12 +33,8 @@ class OrderProcessor:
             yield order
 
     def get_factory(self, brand_type):
-        try:
-            factory = self.brand_factory_mapper[brand_type]
-        except KeyError:
-            print('No factory found for invalid brand type')
-        else:
-            return factory()
+        factory = self.brand_factory_mapper[brand_type]
+        return factory()
 
     def reformat(self, order_detail):
         formatted_order_detail = {}
@@ -51,6 +49,7 @@ class Order:
     Order contains order details read from OrderProcessor and a factory
     reference to a factory class.
     """
+
     def __init__(self, order_detail, factory):
         self.order_detail = order_detail
         self.factory = factory
