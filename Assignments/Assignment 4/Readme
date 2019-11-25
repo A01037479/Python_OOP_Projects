@@ -1,0 +1,27 @@
+------------------------------------Readme------------------------------------
+This program utilized abstract factory design pattern to simulate a garment
+factory.
+BrandFactory introduces methods of a factory class.
+LuluLimeFactory, PineappleRepublicFactory and NikaFactory are three concrete
+factory classes that define what product each factory will produce.
+ShirtMen, ShirtWomen and SockPairUnisex are three product interfaces.
+All other product concrete classes defines corresponding features of each class.
+Order class summarizes order detail and holds a reference to BrandFactory.
+OrderProcessor reads from an excel sheet and manages orders.
+GarmentMaker contains a OrderProcessor object and make products based on orders
+stored in OrderProcessor and prints production report.
+
+
+Question 1.
+Add ShirtMenGoosie to extend from ShirtMen.
+Add ShirtWomenGoosie to extend from ShirtWomen.
+Add SockPairUnisexGoosie to extend from SockPairUnisex.
+Add GoosieFactory to extend from BrandFactory, that uses constructors of
+ShirtMenGoosie, ShirtWomenGoosie and SockPairUnisexGoosie.
+
+Question 2.
+Add ActivewearPantsWomen interface.
+Add children classes ActivewearPantsWomenLuluLime, ActivewearPantsWomenNika
+and ActivewearPantsWomenPineappleRepublic.
+Add method create_activewear_pants_women to LuluLimeFactory,
+PineappleRepublicFactory and NikaFactory
