@@ -1,7 +1,14 @@
+"""
+This module contains the Abstract Factory Pattern for a garment factory.
+"""
 from abc import ABC
 
 
 class BrandFactory(ABC):
+    """
+    BrandFactory defines the interface for three types of the garment that
+    abstract factory pattern is responsible to create.
+    """
     def create_shirt_men(self, **kwargs):
         pass
 
@@ -13,6 +20,9 @@ class BrandFactory(ABC):
 
 
 class LuluLimeFactory(BrandFactory):
+    """
+    LuluLimeFactory is a type of BrandFactory that creates garment.
+    """
     def create_shirt_men(self, **kwargs):
         return ShirtMenLuluLime(**kwargs)
 
@@ -24,6 +34,9 @@ class LuluLimeFactory(BrandFactory):
 
 
 class PineappleRepublicFactory(BrandFactory):
+    """
+    PineappleRepublicFactory is a type of BrandFactory that creates garment.
+    """
     def create_shirt_men(self, **kwargs):
         return ShirtMenPineappleRepublic(**kwargs)
 
@@ -35,6 +48,9 @@ class PineappleRepublicFactory(BrandFactory):
 
 
 class NikaFactory(BrandFactory):
+    """
+    NikaFactory is a type of BrandFactory that creates garment.
+    """
     def create_shirt_men(self, **kwargs):
         return ShirtMenNika(**kwargs)
 
@@ -46,6 +62,9 @@ class NikaFactory(BrandFactory):
 
 
 class ShirtMen(ABC):
+    """
+    ShirtMen defines the interface for one kind of garment
+    """
     def __init__(self, style_name=None, size=None, colour=None, textile=None,
                  **kwargs):
         self.style_name = style_name
@@ -54,10 +73,14 @@ class ShirtMen(ABC):
         self.textile = textile
 
     def __str__(self):
-        return f'{self.style_name}, {self.size}, {self.colour}, {self.textile}'
+        return f'Style name: {self.style_name}, Size {self.size},' \
+               f' Colour: {self.colour}, Textile: {self.textile}'
 
 
 class ShirtWomen(ABC):
+    """
+    ShirtWomen defines the interface for one kind of garment
+    """
     def __init__(self, style_name=None, size=None, colour=None, textile=None,
                  **kwargs):
         self.style_name = style_name
@@ -66,10 +89,14 @@ class ShirtWomen(ABC):
         self.textile = textile
 
     def __str__(self):
-        return f'{self.style_name}, {self.size}, {self.colour}, {self.textile}'
+        return f'Style name: {self.style_name}, Size {self.size},' \
+               f' Colour: {self.colour}, Textile: {self.textile}'
 
 
 class SockPairUnisex(ABC):
+    """
+    SockPairUnisex defines the interface for one kind of garment
+    """
     def __init__(self, style_name=None, size=None, colour=None, textile=None,
                  **kwargs):
         self.style_name = style_name
@@ -78,91 +105,125 @@ class SockPairUnisex(ABC):
         self.textile = textile
 
     def __str__(self):
-        return f'{self.style_name}, {self.size}, {self.colour}, {self.textile}'
+        return f'Style name: {self.style_name}, Size {self.size},' \
+               f' Colour: {self.colour}, Textile: {self.textile}'
 
 
 class ShirtMenLuluLime(ShirtMen):
+    """
+    ShirtMenLuluLime defines a type of ShirtMen garment
+    """
     def __init__(self, sport=None, hidden_zipper_pockets=None, **kwargs):
         super().__init__(**kwargs)
         self.sport = sport
         self.hidden_zipper_pockets = hidden_zipper_pockets
 
     def __str__(self):
-        return f'{super().__str__()}, {self.sport}, {self.hidden_zipper_pockets}'
+        return f'{super().__str__()}, Sport: {self.sport}' \
+               f', Hidden Zipper pockets: {self.hidden_zipper_pockets}'
 
 
 class ShirtMenPineappleRepublic(ShirtMen):
+    """
+    ShirtMenPineappleRepublic defines a type of ShirtMen garment
+    """
     def __init__(self, buttons=None, requires_ironing=None, **kwargs):
         super().__init__(**kwargs)
         self.buttons = buttons
         self.requires_ironing = requires_ironing
 
     def __str__(self):
-        return f'{super().__str__()}, {self.buttons}, {self.requires_ironing}'
+        return f'{super().__str__()}, Buttons: {self.buttons},' \
+               f' Requires Ironing {self.requires_ironing}'
 
 
 class ShirtMenNika(ShirtMen):
+    """
+    ShirtMenNika defines a type of ShirtMen garment
+    """
     def __init__(self, indoor_outdoor=None, **kwargs):
         super().__init__(**kwargs)
         self.indoor_outdoor = indoor_outdoor
 
     def __str__(self):
-        return f'{super().__str__()}, {self.indoor_outdoor}'
+        return f'{super().__str__()}, Indoor/Outdoor: {self.indoor_outdoor}'
 
 
 class ShirtWomenLuluLime(ShirtWomen):
+    """
+    ShirtWomenLuluLime defines a type of ShirtWomen garment
+    """
     def __init__(self, sport=None, hidden_zipper_pockets=None, **kwargs):
         super().__init__(**kwargs)
         self.sport = sport
         self.hidden_zipper_pockets = hidden_zipper_pockets
 
     def __str__(self):
-        return f'{super().__str__()}, {self.sport}, {self.hidden_zipper_pockets}'
+        return f'{super().__str__()}, Sport: {self.sport},' \
+               f' Hidden Zipper Pockets: {self.hidden_zipper_pockets}'
 
 
 class ShirtWomenPineappleRepublic(ShirtWomen):
+    """
+    ShirtWomenPineappleRepublic defines a type of ShirtWomen garment
+    """
     def __init__(self, buttons=None, requires_ironing=None, **kwargs):
         super().__init__(**kwargs)
         self.buttons = buttons
         self.requires_ironing = requires_ironing
 
     def __str__(self):
-        return f'{super().__str__()}, {self.buttons}, {self.requires_ironing}'
+        return f'{super().__str__()}, Buttons: {self.buttons},' \
+               f' Requires Ironing: {self.requires_ironing}'
 
 
 class ShirtWomenNika(ShirtWomen):
+    """
+    ShirtWomenNika defines a type of ShirtWomen garment
+    """
     def __init__(self, indoor_outdoor=None, **kwargs):
         super().__init__(**kwargs)
         self.indoor_outdoor = indoor_outdoor
 
     def __str__(self):
-        return f'{super().__str__()}, {self.indoor_outdoor}'
+        return f'{super().__str__()}, Indoor/Outdoor: {self.indoor_outdoor}'
 
 
 class SockPairUnisexLuluLime(SockPairUnisex):
+    """
+    SockPairUnisexLuluLime defines a type of SockPairUnisex garment
+    """
     def __init__(self, silver=None, stripe=None, **kwargs):
         super().__init__(**kwargs)
         self.silver = silver
         self.stripe = stripe
 
     def __str__(self):
-        return f'{super().__str__()}, {self.silver}, {self.stripe}'
+        return f'{super().__str__()}, Silver: {self.silver},' \
+               f' Stripe: {self.stripe}'
 
 
 class SockPairUnisexPineappleRepublic(SockPairUnisex):
+    """
+    SockPairUnisexPineappleRepublic defines a type of SockPairUnisex garment
+    """
     def __init__(self, dry_cleaning=None, **kwargs):
         super().__init__(**kwargs)
         self.dry_cleaning = dry_cleaning
 
     def __str__(self):
-        return f'{super().__str__()}, {self.dry_cleaning}'
+        return f'{super().__str__()}, Dry Cleaning: {self.dry_cleaning}'
 
 
 class SockPairUnisexNika(SockPairUnisex):
+    """
+    SockPairUnisexNika defines a type of SockPairUnisex garment
+    """
     def __init__(self, articulated=None, length=None, **kwargs):
         super().__init__(**kwargs)
         self.articulated = articulated
         self.length = length
 
     def __str__(self):
-        return f'{super().__str__()}, {self.articulated}, {self.length}'
+        return f'{super().__str__()}, Articulated: {self.articulated}, ' \
+               f'Length: {self.length}'

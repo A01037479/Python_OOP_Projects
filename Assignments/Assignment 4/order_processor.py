@@ -1,11 +1,15 @@
-import enum
-from cmath import nan
-
+"""
+This module contains OrderProcessor that deals with Order objects.
+"""
 import pandas as pd
-from factory import LuluLimeFactory, PineappleRepublicFactory, NikaFactory
+from garment_abstract_factory import LuluLimeFactory, PineappleRepublicFactory, NikaFactory
 
 
 class OrderProcessor:
+    """
+    OrderProcessor reads from a excel sheet of order details and creates orders.
+    It contains a orders dictionary and a mapper to the BrandFactory classes.
+    """
     def __init__(self):
         self.orders_dict = None
         self.brand_factory_mapper = {'Lululime': LuluLimeFactory,
@@ -17,6 +21,10 @@ class OrderProcessor:
         self.orders_dict = excel_data.to_dict(orient='records')
 
     def process_next_order(self):
+        """
+        A generator that yields next Order object in the orders dictionary.
+        :return: Order
+        """
         for order_detail in self.orders_dict:
             formatted_order_detail = self.reformat(order_detail)
             factory = self.get_factory(formatted_order_detail['brand'])
@@ -30,15 +38,16 @@ class OrderProcessor:
     def reformat(self, order_detail):
         formatted_order_detail = {}
         for key in order_detail.keys():
-            # print(type(order_detail[key]), order_detail[key])
             new_key = key.lower().replace(' ', '_').replace('/', '_')
             formatted_order_detail[new_key] = order_detail[key]
-            # if order_detail[key] == float(nan):
-            #     formatted_order_detail[new_key] = 'N/A'
         return formatted_order_detail
 
 
 class Order:
+    """
+    Order contains order details read from OrderProcessor and a factory
+    reference to a factory class.
+    """
     def __init__(self, order_detail, factory):
         self.order_detail = order_detail
         self.factory = factory
