@@ -11,29 +11,32 @@ class OrderProcessor:
     It contains a orders dictionary and a mapper to the BrandFactory classes.
     """
     def __init__(self):
-        self.orders_dict = None
+        self.orders_data_frame = None
         self.brand_factory_mapper = {'Lululime': LuluLimeFactory,
                                      'PineappleRepublic': PineappleRepublicFactory,
                                      'Nika': NikaFactory}
 
     def open_order_sheet(self, file_name):
-        excel_data = pd.read_excel(file_name)
-        self.orders_dict = excel_data.to_dict(orient='records')
+        self.orders_data_frame = pd.read_excel(file_name)
 
     def process_next_order(self):
         """
         A generator that yields next Order object in the orders dictionary.
         :return: Order
         """
-        for order_detail in self.orders_dict:
+        for order_detail in self.orders_data_frame.to_dict(orient='records'):
             formatted_order_detail = self.reformat(order_detail)
             factory = self.get_factory(formatted_order_detail['brand'])
             order = Order(formatted_order_detail, factory)
             yield order
 
-    def get_factory(self, garment_type):
-        factory = self.brand_factory_mapper[garment_type]
-        return factory()
+    def get_factory(self, brand_type):
+        try:
+            factory = self.brand_factory_mapper[brand_type]
+        except KeyError:
+            print('No factory found for invalid brand type')
+        else:
+            return factory()
 
     def reformat(self, order_detail):
         formatted_order_detail = {}
