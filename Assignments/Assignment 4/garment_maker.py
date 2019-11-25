@@ -28,6 +28,8 @@ class GarmentMaker:
         order_detail = shirt_men_order.order_detail
         factory = shirt_men_order.factory
         count = shirt_men_order.order_detail['count']
+        if not isinstance(count, int):
+            raise ValueError('Order count should be an integer.')
         shirt = factory.create_shirt_men(**order_detail)
         self.shirts_men[shirt] = count
 
