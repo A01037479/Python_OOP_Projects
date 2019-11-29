@@ -93,10 +93,20 @@ class IOHandler:
 
     def get_commandline_inputs(self):
         parser = argparse.ArgumentParser()
-        parser.add_argument('mode', choices=("pokemon", "ability", "move"))
-        parser.add_argument('name_or_id')
-        parser.add_argument('--expanded', action='store_true')
-        parser.add_argument('--output')
+        parser.add_argument('mode', choices=("pokemon", "ability", "move"),
+                            help='The mode to run the program, api request '
+                                 'will be made base on mode.')
+        parser.add_argument('name_or_id', help='Input of the program, either '
+                                               'a string that represents a name'
+                                               ' or id of a mode, or a file'
+                                               'path that contains name or id '
+                                               'information.')
+        parser.add_argument('--expanded', action='store_true',
+                            help='The argument to specify if the api response'
+                                 'is return in expanded context.')
+        parser.add_argument('--output', help='Output of the program, it is'
+                                             'specified when a output file is'
+                                             'requested.')
 
         try:
             args = parser.parse_args()
