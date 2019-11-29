@@ -54,3 +54,10 @@ class Move(DataModel):
                f'\npower: {self.power}\ntype: {self.type}' \
                f'\ndamage class: {self.damage_class}' \
                f'\neffect(short): {self.short_effect}\n'
+
+
+class Stats:
+    def __init__(self, name, base_stat, url):
+        self.name = name
+        self.base_stat = base_stat
+        self.url = url
