@@ -13,10 +13,15 @@ class PokemonDataParser:
 
     @staticmethod
     async def get_data(request: string,
-                       session: aiohttp.ClientSession) -> dict:
-        response = await session.request(method="GET", url=request)
-        json_dict = await response.json()
-        return json_dict
+                       session: aiohttp.ClientSession):
+        try:
+            response = await session.request(method="GET", url=request)
+            json_dict = await response.json()
+        except aiohttp.ContentTypeError:
+            return {'invalid': True}
+        else:
+            json_dict['invalid'] = False
+            return json_dict
 
     @staticmethod
     async def process_requests_tasks(requests: list) -> list:
@@ -29,6 +34,8 @@ class PokemonDataParser:
 
     @staticmethod
     def create_pokemon(response, is_expanded):
+        if response['invalid'] is True:
+            return '--------Invalid Pokemon--------\n'
         kwargs = {'id': response['id'], 'name': response['name'],
                   'height': response['height'], 'weight': response['weight'],
                   'types': [type['type']['name'] for type in
@@ -47,10 +54,12 @@ class PokemonDataParser:
             stats_responses = asyncio.run(
                 PokemonDataParser.process_requests_tasks(stats_requests))
             for i in range(len(stats_responses)):
-                stats_responses[i]['base_stat'] = response['stats'][i]['base_stat']
+                stats_responses[i]['base_stat'] = response['stats'][i][
+                    'base_stat']
             for i in range(len(moves_responses)):
                 moves_responses[i]['level_learned_at'] \
-                    = response['moves'][i]["version_group_details"][0]['level_learned_at']
+                    = response['moves'][i]["version_group_details"][0][
+                    'level_learned_at']
             kwargs['stats'] = [PokemonDataParser.create_stat(stat)
                                for stat in stats_responses]
             kwargs['abilities'] = [PokemonDataParser.create_ability(ability)
@@ -70,6 +79,8 @@ class PokemonDataParser:
 
     @staticmethod
     def create_ability(response):
+        if response['invalid'] is True:
+            return '--------Invalid Ability--------\n'
         kwargs = {'id': response['id'], 'name': response['name'],
                   'generation': response['generation']['name'],
                   'pokemon': [pokemon['pokemon']['name'] for pokemon in
@@ -83,6 +94,8 @@ class PokemonDataParser:
 
     @staticmethod
     def create_move(response):
+        if response['invalid'] is True:
+            return '--------Invalid Move--------\n'
         kwargs = {'id': response['id'], 'name': response['name'],
                   'generation': response['generation']['name'],
                   'accuracy': response['accuracy'], 'pp': response['pp'],
@@ -157,7 +170,6 @@ class RequestHandler:
                 urls = [PokemonDataParser.build_url(
                     self.request.mode, name_or_id.strip('\n')).lower()
                         for name_or_id in names_or_ids]
-            print(urls)
         else:
             # read from input string
             urls = [PokemonDataParser.build_url(self.request.mode,
@@ -180,6 +192,7 @@ class RequestHandler:
                 # print to console
                 print(output)
             else:
+                # write to an output file
                 with open(self.request.output_file, 'a') as file:
                     file.write(str(output))
 
@@ -188,11 +201,10 @@ def main():
     try:
         request_handler = RequestHandler()
         request_handler.get_request()
-        print(request_handler.request)
         request_handler.process_request()
         request_handler.execute_response()
-    except aiohttp.client_exceptions.ContentTypeError:
-        print('Invalid input.')
+    except aiohttp.ClientConnectionError:
+        print(f'Internet not available.')
         quit()
 
 
