@@ -46,8 +46,13 @@ class PokemonDataParser:
                               response['stats']]
             stats_responses = asyncio.run(
                 PokemonDataParser.process_requests_tasks(stats_requests))
-            kwargs['stats'] = [PokemonDataParser.create_stat(stat) for stat in
-                               stats_responses]
+            for i in range(len(stats_responses)):
+                stats_responses[i]['base_stat'] = response['stats'][i]['base_stat']
+            for i in range(len(moves_responses)):
+                moves_responses[i]['level_learned_at'] \
+                    = response['moves'][i]["version_group_details"][0]['level_learned_at']
+            kwargs['stats'] = [PokemonDataParser.create_stat(stat)
+                               for stat in stats_responses]
             kwargs['abilities'] = [PokemonDataParser.create_ability(ability)
                                    for ability in abilities_responses]
             kwargs['moves'] = [PokemonDataParser.create_move(move) for move in
@@ -82,7 +87,8 @@ class PokemonDataParser:
                   'generation': response['generation']['name'],
                   'accuracy': response['accuracy'], 'pp': response['pp'],
                   'power': response['power'], 'type': response['type']['name'],
-                  'damage_class': response['damage_class']['name']
+                  'damage_class': response['damage_class']['name'],
+                  'level_learned_at': response['level_learned_at']
                   }
         for effect_entry in response['effect_entries']:
             if effect_entry['language']['name'] == 'en':
@@ -93,7 +99,7 @@ class PokemonDataParser:
     def create_stat(response):
         kwargs = {'id': response['id'], 'name': response['name'],
                   'is_battle_only': response['is_battle_only'],
-                  'base_stat': response["base_stat"]
+                  'base_stat': response['base_stat']
                   }
         return Stat(**kwargs)
 
@@ -124,7 +130,7 @@ class RequestHandler:
                                                ' or id of a mode, or a file '
                                                'path that contains name or id '
                                                'information.')
-        parser.add_argument('--expanded', action='store_true',
+        parser.add_argument('-e', '--expanded', action='store_true',
                             help='The argument to specify if the api response'
                                  ' is return in expanded context.')
         parser.add_argument('--output', help='Output of the program, it is '

@@ -22,12 +22,6 @@ class Pokemon(DataModel):
         self.abilities = abilities
         self.moves = moves
 
-    # def __str__(self):
-    #     return f"{super().__str__()}\nheight: {self.height}" \
-    #            f"\nweight: {self.weight}\ntypes: {self.types}" \
-    #            f"\nstats: {self.stats}\nabilities: {self.abilities}" \
-    #            f"\nmoves: {self.moves}"
-
     def __str__(self):
         str_repr = f"{super().__str__()}" \
                    f"\nheight: {self.height}" \
@@ -37,7 +31,6 @@ class Pokemon(DataModel):
             str_repr += '\n   ' + str(type)
         str_repr += '\nMoves:\n'
         for move in self.moves:
-            print(move)
             str_repr += '   ' + str(move) + '\n'
         str_repr += 'Stats:\n'
         for stat in self.stats:
@@ -66,7 +59,8 @@ class Ability(DataModel):
 
 class Move(DataModel):
     def __init__(self, generation=None, accuracy=None, pp=None, power=None,
-                 type=None, damage_class=None, short_effect=None, **kwargs):
+                 type=None, damage_class=None, short_effect=None,
+                 level_learned_at=None, **kwargs):
         super().__init__(**kwargs)
         self.generation = generation
         self.accuracy = accuracy
@@ -75,6 +69,7 @@ class Move(DataModel):
         self.type = type
         self.damage_class = damage_class
         self.short_effect = short_effect
+        self.level_learned_at = level_learned_at
 
     def __str__(self):
         return f'{super().__str__()}\ngeneration: {self.generation}' \
@@ -82,7 +77,8 @@ class Move(DataModel):
                f'\npp: {self.pp}' \
                f'\npower: {self.power}\ntype: {self.type}' \
                f'\ndamage class: {self.damage_class}' \
-               f'\neffect(short): {self.short_effect}\n'
+               f'\neffect(short): {self.short_effect}' \
+               f'\nlevel learned at: {self.level_learned_at}\n'
 
 
 class Stat(DataModel):
@@ -94,4 +90,3 @@ class Stat(DataModel):
     def __str__(self):
         return f'{super().__str__()}\nis battle only: {self.is_battle_only}' \
                f'\nbase value: {self.base_stat}'
-
