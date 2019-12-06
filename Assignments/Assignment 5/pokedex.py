@@ -1,69 +1,83 @@
 import argparse
 import asyncio
 import string
-
 import aiohttp
-from data_models import Pokemon, Ability, Move, Stats
+from data_models import Pokemon, Ability, Move, Stat
 
 
 class PokemonDataParser:
-    def __init__(self):
-        self.url = "https://pokeapi.co/api/v2/{}/{}/"
 
-    async def get_data(self, data_model_name: string, request_name: string,
+    @staticmethod
+    def build_url(mode, name_or_id):
+        return "https://pokeapi.co/api/v2/{}/{}/".format(mode, name_or_id)
+
+    @staticmethod
+    async def get_data(request: string,
                        session: aiohttp.ClientSession) -> dict:
-        target_url = self.url.format(data_model_name, request_name)
-        response = await session.request(method="GET", url=target_url)
+        response = await session.request(method="GET", url=request)
         json_dict = await response.json()
         return json_dict
 
-    # async def process_single_request_task(self, data_model_name: string,
-    #                                       request_name: string) -> list:
-    #     async with aiohttp.ClientSession() as session:
-    #         coroutine = self.get_data(data_model_name, request_name, session)
-    #         async_task = asyncio.create_task(coroutine)
-    #         response = await async_task
-    #         return response
-
-    async def process_requests_tasks(self, requests: list) -> list:
+    @staticmethod
+    async def process_requests_tasks(requests: list) -> list:
         async with aiohttp.ClientSession() as session:
-            tasks = [asyncio.create_task(self.get_data(*request, session))
-                     for request in requests]
+            tasks = [asyncio.create_task(
+                PokemonDataParser.get_data(request, session))
+                for request in requests]
             responses = await asyncio.gather(*tasks)
             return responses
 
-    def create_pokemon(self, response):
+    @staticmethod
+    def create_pokemon(response, is_expanded):
         kwargs = {'id': response['id'], 'name': response['name'],
-                  'generation': None,
                   'height': response['height'], 'weight': response['weight'],
-                  'stats': [Stats(stat['stat']['name'], stat['base_stat'],
-                                  stat['stat']['url']) for stat in
-                            response['stats']],
                   'types': [type['type']['name'] for type in
-                            response['types']],
-                  'abilities': [self.create_ability(
-                      self.process_single_request_task('ability',
-                                                       ability['ability'][
-                                                           'name'])) for
-                      ability in response['abilities']],
-                  'moves': [self.create_move(
-                      self.process_single_request_task('move',
-                                                       move['move']['name']))
-                      for move in response['moves']]}
+                            response['types']]}
+        if is_expanded:
+            abilities_requests = [ability['ability']['url'] for
+                                  ability in response['abilities']]
+            abilities_responses = asyncio.run(
+                PokemonDataParser.process_requests_tasks(abilities_requests))
+            moves_requests = [move['move']['url'] for
+                              move in response['moves']]
+            moves_responses = asyncio.run(
+                PokemonDataParser.process_requests_tasks(moves_requests))
+            stats_requests = [stat['stat']['url'] for stat in
+                              response['stats']]
+            stats_responses = asyncio.run(
+                PokemonDataParser.process_requests_tasks(stats_requests))
+            kwargs['stats'] = [PokemonDataParser.create_stat(stat) for stat in
+                               stats_responses]
+            kwargs['abilities'] = [PokemonDataParser.create_ability(ability)
+                                   for ability in abilities_responses]
+            kwargs['moves'] = [PokemonDataParser.create_move(move) for move in
+                               moves_responses]
+        else:
+            kwargs['stats'] = [f'{stat["stat"]["name"]}: {stat["base_stat"]}'
+                               for stat in response['stats']]
+            kwargs['abilities'] = [f'{ability["ability"]["name"]}'
+                                   for ability in response['abilities']]
+            kwargs['moves'] = [f'{move["move"]["name"]}: learnt at lvl ' \
+                               f'{move["version_group_details"][0]["level_learned_at"]}'
+                               for move in response['moves']]
+
         return Pokemon(**kwargs)
 
-    def create_ability(self, response):
+    @staticmethod
+    def create_ability(response):
         kwargs = {'id': response['id'], 'name': response['name'],
                   'generation': response['generation']['name'],
                   'pokemon': [pokemon['pokemon']['name'] for pokemon in
-                              response['pokemon']]}
+                              response['pokemon']]
+                  }
         for effect_entry in response['effect_entries']:
             if effect_entry['language']['name'] == 'en':
                 kwargs['effect'] = effect_entry['effect']
                 kwargs['short_effect'] = effect_entry['short_effect']
         return Ability(**kwargs)
 
-    def create_move(self, response):
+    @staticmethod
+    def create_move(response):
         kwargs = {'id': response['id'], 'name': response['name'],
                   'generation': response['generation']['name'],
                   'accuracy': response['accuracy'], 'pp': response['pp'],
@@ -75,8 +89,16 @@ class PokemonDataParser:
                 kwargs['short_effect'] = effect_entry['short_effect']
         return Move(**kwargs)
 
+    @staticmethod
+    def create_stat(response):
+        kwargs = {'id': response['id'], 'name': response['name'],
+                  'is_battle_only': response['is_battle_only'],
+                  'base_stat': response["base_stat"]
+                  }
+        return Stat(**kwargs)
 
-class InputArgs:
+
+class Request:
     def __init__(self):
         self.mode = None
         self.name_or_id = None
@@ -87,76 +109,85 @@ class InputArgs:
         return f'{self.mode}, {self.name_or_id}, {self.expanded}, {self.output_file}.'
 
 
-class IOHandler:
+class RequestHandler:
     def __init__(self):
-        self.input_args = InputArgs()
+        self.request = Request()
+        self.response = None
 
-    def get_commandline_inputs(self):
+    def get_request(self):
         parser = argparse.ArgumentParser()
         parser.add_argument('mode', choices=("pokemon", "ability", "move"),
                             help='The mode to run the program, api request '
                                  'will be made base on mode.')
-        parser.add_argument('name_or_id', help='Input of the program, either '
-                                               'a string that represents a name'
-                                               ' or id of a mode, or a file'
+        parser.add_argument('name_or_id', help='Input of the program, either a'
+                                               'string that represents a name'
+                                               ' or id of a mode, or a file '
                                                'path that contains name or id '
                                                'information.')
         parser.add_argument('--expanded', action='store_true',
                             help='The argument to specify if the api response'
-                                 'is return in expanded context.')
-        parser.add_argument('--output', help='Output of the program, it is'
+                                 ' is return in expanded context.')
+        parser.add_argument('--output', help='Output of the program, it is '
                                              'specified when a output file is'
-                                             'requested.')
+                                             ' requested.')
 
         try:
             args = parser.parse_args()
-            input_args = InputArgs()
-            input_args.mode = args.mode
-            input_args.name_or_id = args.name_or_id
-            input_args.expanded = args.expanded
-            input_args.output_file = args.output
-            self.input_args = input_args
+            request = Request()
+            request.mode = args.mode
+            request.name_or_id = args.name_or_id
+            request.expanded = args.expanded
+            request.output_file = args.output
+            self.request = request
         except Exception as e:
             print(f"Error! Could not read arguments.\n{e}")
             quit()
 
-    def execute_output(self):
-        try:
-            data_parser = PokemonDataParser()
-            requests = []
-            if not self.input_args.name_or_id.endswith('.txt'):
-                # read from input string
-                requests.append([self.input_args.mode,
-                                 self.input_args.name_or_id])
+    def process_request(self):
+        if self.request.name_or_id.endswith('.txt'):
+            # read from input file
+            with open(self.request.name_or_id, 'r') as file:
+                names_or_ids = file.readlines()
+                urls = [PokemonDataParser.build_url(
+                    self.request.mode, name_or_id.strip('\n')).lower()
+                        for name_or_id in names_or_ids]
+            print(urls)
+        else:
+            # read from input string
+            urls = [PokemonDataParser.build_url(self.request.mode,
+                                                self.request.name_or_id)]
+        responses = asyncio.run(
+            PokemonDataParser.process_requests_tasks(urls))
+        self.response = responses
+
+    def execute_response(self):
+        for response in self.response:
+            output = None
+            if self.request.mode == 'ability':
+                output = PokemonDataParser.create_ability(response)
+            elif self.request.mode == 'pokemon':
+                output = PokemonDataParser.create_pokemon \
+                    (response, self.request.expanded)
+            elif self.request.mode == 'move':
+                output = PokemonDataParser.create_move(response)
+            if not self.request.output_file:
+                # print to console
+                print(output)
             else:
-                # read from input file
-                pass
-            responses = asyncio.run(
-                data_parser.process_requests_tasks(requests))
-            for response in responses:
-                output = None
-                if self.input_args.mode == 'ability':
-                    output = data_parser.create_ability(response)
-                elif self.input_args.mode == 'pokemon':
-                    output = data_parser.create_pokemon(response)
-                elif self.input_args.mode == 'move':
-                    output = data_parser.create_move(response)
-                if not self.input_args.output_file:
-                    # print to console
-                    print(output)
-                else:
-                    # write to file
-                    pass
-        except aiohttp.client_exceptions.ContentTypeError:
-            print('Invalid input.')
-            quit()
+                with open(self.request.output_file, 'a') as file:
+                    file.write(str(output))
 
 
 def main():
-    io_handler = IOHandler()
-    io_handler.get_commandline_inputs()
-    print(io_handler.input_args)
-    io_handler.execute_output()
+    try:
+        request_handler = RequestHandler()
+        request_handler.get_request()
+        print(request_handler.request)
+        request_handler.process_request()
+        request_handler.execute_response()
+    except aiohttp.client_exceptions.ContentTypeError:
+        print('Invalid input.')
+        quit()
 
 
 if __name__ == '__main__':
