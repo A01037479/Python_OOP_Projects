@@ -146,9 +146,9 @@ class RequestHandler:
         parser.add_argument('-e', '--expanded', action='store_true',
                             help='The argument to specify if the api response'
                                  ' is return in expanded context.')
-        parser.add_argument('--output', help='Output of the program, it is '
-                                             'specified when a output file is'
-                                             ' requested.')
+        parser.add_argument('-o', '--output',
+                            help='Output of the program, it is '
+                                 'specified when a output file is requested.')
 
         try:
             args = parser.parse_args()
@@ -174,8 +174,7 @@ class RequestHandler:
             # read from input string
             urls = [PokemonDataParser.build_url(self.request.mode,
                                                 self.request.name_or_id)]
-        responses = asyncio.run(
-            PokemonDataParser.process_requests_tasks(urls))
+        responses = asyncio.run(PokemonDataParser.process_requests_tasks(urls))
         self.response = responses
 
     def execute_response(self):
@@ -191,10 +190,12 @@ class RequestHandler:
             if not self.request.output_file:
                 # print to console
                 print(output)
-            else:
+            elif self.request.output_file.endswith('txt'):
                 # write to an output file
                 with open(self.request.output_file, 'a') as file:
                     file.write(str(output))
+            else:
+                raise ValueError('Output file should be a text file.(.txt)')
 
 
 def main():
@@ -205,7 +206,12 @@ def main():
         request_handler.execute_response()
     except aiohttp.ClientConnectionError:
         print(f'Internet not available.')
-        quit()
+    except FileNotFoundError as e:
+        print(f'File {e.filename} can not be found')
+    except ValueError as e:
+        print(e)
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
