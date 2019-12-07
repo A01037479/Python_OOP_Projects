@@ -1,3 +1,7 @@
+"""
+The module simulates a pokedex that takes in requests from user to retrieve
+information of Pokemon, Ability or Move.
+"""
 import argparse
 import asyncio
 import string
@@ -6,14 +10,31 @@ from data_models import Pokemon, Ability, Move, Stat
 
 
 class PokemonDataParser:
-
+    """
+    PokemonDataParser is responsible to make requests based on user's inputs
+    to retrieve information of Pokemon, Ability or Move and create corresponding
+    objects.
+    """
     @staticmethod
     def build_url(mode, name_or_id):
+        """
+        Helps forming url that make request to the pokemon api.
+        :param mode:  string
+        :param name_or_id: string
+        :return: string
+        """
         return "https://pokeapi.co/api/v2/{}/{}/".format(mode, name_or_id)
 
     @staticmethod
     async def get_data(request: string,
-                       session: aiohttp.ClientSession):
+                       session: aiohttp.ClientSession) -> dict:
+        """
+        Retrieves data asynchronously in form of json dictionary based on a
+        string request.
+        :param request: string
+        :param session: aiohttp.ClientSession
+        :return: dict
+        """
         try:
             response = await session.request(method="GET", url=request)
             json_dict = await response.json()
@@ -25,6 +46,12 @@ class PokemonDataParser:
 
     @staticmethod
     async def process_requests_tasks(requests: list) -> list:
+        """
+        Processes a list of requests asynchronously and return a list of
+        corresponding responses.
+        :param requests: list
+        :return: list
+        """
         async with aiohttp.ClientSession() as session:
             tasks = [asyncio.create_task(
                 PokemonDataParser.get_data(request, session))
@@ -34,6 +61,16 @@ class PokemonDataParser:
 
     @staticmethod
     def create_pokemon(response, is_expanded):
+        """
+        Creates a pokemon object based on a response retrieved.
+        Pokemon object has two versions: expanded and non-expanded.
+        Non-expanded version contains limited information of pokemon's move,
+        ability and stats while expanded version provides more comprehensive
+        information.
+        :param response: dict
+        :param is_expanded: boolean
+        :return: Pokemon
+        """
         if response['invalid'] is True:
             return '--------Invalid Pokemon--------\n'
         kwargs = {'id': response['id'], 'name': response['name'],
@@ -79,6 +116,11 @@ class PokemonDataParser:
 
     @staticmethod
     def create_ability(response):
+        """
+        Creates an Ability object based on the response retrieved.
+        :param response: dict
+        :return: Ability
+        """
         if response['invalid'] is True:
             return '--------Invalid Ability--------\n'
         kwargs = {'id': response['id'], 'name': response['name'],
@@ -94,6 +136,11 @@ class PokemonDataParser:
 
     @staticmethod
     def create_move(response):
+        """
+        Creates an Move object based on the response retrieved.
+        :param response: dict
+        :return: Move
+        """
         if response['invalid'] is True:
             return '--------Invalid Move--------\n'
         kwargs = {'id': response['id'], 'name': response['name'],
@@ -110,6 +157,11 @@ class PokemonDataParser:
 
     @staticmethod
     def create_stat(response):
+        """
+        Creates a Stat object based on the response retrieved.
+        :param response: dict
+        :return: Stat
+        """
         kwargs = {'id': response['id'], 'name': response['name'],
                   'is_battle_only': response['is_battle_only'],
                   'base_stat': response['base_stat']
@@ -118,22 +170,36 @@ class PokemonDataParser:
 
 
 class Request:
+    """
+    Request represents all the information of command line user input.
+    mode is mandatory argument that user picks from 'pokemon', 'ability' or
+    'move'.
+    name_or_id is a mandatory argument that represents a name or id of a
+    pokemon, ability or move.
+    output_file is an optional argument that specify the path of output file.
+    expanded is a boolean that specify if the pokemon information is expanded.
+    """
     def __init__(self):
         self.mode = None
         self.name_or_id = None
         self.output_file = None
         self.expanded = None
 
-    def __str__(self):
-        return f'{self.mode}, {self.name_or_id}, {self.expanded}, {self.output_file}.'
-
 
 class RequestHandler:
+    """
+    RequestHandler contains a Request and corresponding response.
+    It retrieves user input from command line and process requests accordingly
+    and execute the response.
+    """
     def __init__(self):
         self.request = Request()
         self.response = None
 
     def get_request(self):
+        """
+        Retrieves request from commandline user inputs.
+        """
         parser = argparse.ArgumentParser()
         parser.add_argument('mode', choices=("pokemon", "ability", "move"),
                             help='The mode to run the program, api request '
@@ -160,10 +226,13 @@ class RequestHandler:
             self.request = request
         except Exception as e:
             print(f"Error! Could not read arguments.\n{e}")
-            quit()
 
     def process_request(self):
-        if self.request.name_or_id.endswith('.txt'):
+        """
+        Process the requests by making pokemon api requests and save results
+        to responses.
+        """
+        if self.request.name_or_id.lower().endswith('.txt'):
             # read from input file
             with open(self.request.name_or_id, 'r') as file:
                 names_or_ids = file.readlines()
@@ -178,19 +247,22 @@ class RequestHandler:
         self.response = responses
 
     def execute_response(self):
+        """
+        Prints response to console or write response to file based on requests.
+        """
         for response in self.response:
             output = None
-            if self.request.mode == 'ability':
+            if self.request.mode.lower() == 'ability':
                 output = PokemonDataParser.create_ability(response)
-            elif self.request.mode == 'pokemon':
+            elif self.request.mode.lower() == 'pokemon':
                 output = PokemonDataParser.create_pokemon \
                     (response, self.request.expanded)
-            elif self.request.mode == 'move':
+            elif self.request.mode.lower() == 'move':
                 output = PokemonDataParser.create_move(response)
             if not self.request.output_file:
                 # print to console
                 print(output)
-            elif self.request.output_file.endswith('txt'):
+            elif self.request.output_file.lower().endswith('txt'):
                 # write to an output file
                 with open(self.request.output_file, 'a') as file:
                     file.write(str(output))
@@ -199,6 +271,9 @@ class RequestHandler:
 
 
 def main():
+    """
+    Main method drives the program and simulates functionality of pokedex.
+    """
     try:
         request_handler = RequestHandler()
         request_handler.get_request()

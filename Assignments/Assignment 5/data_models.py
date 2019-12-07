@@ -1,7 +1,13 @@
+"""
+This module contains data models of pokemon, ability, move and stats.
+"""
 from abc import ABC
 
 
 class DataModel(ABC):
+    """
+    Abstract class that represents a base data model that contains a name and id.
+    """
     def __init__(self, name=None, id=None, **kwargs):
         self.name = name
         self.id = id
@@ -12,6 +18,9 @@ class DataModel(ABC):
 
 
 class Pokemon(DataModel):
+    """
+    Pokemon is a type of DataModel.
+    """
     def __init__(self, height=None, weight=None, stats=None, types=None,
                  abilities=None, moves=None, **kwargs):
         super().__init__(**kwargs)
@@ -42,6 +51,9 @@ class Pokemon(DataModel):
 
 
 class Ability(DataModel):
+    """
+    Ability if a type of DataModel.
+    """
     def __init__(self, generation=None, effect=None, short_effect=None,
                  pokemon=None, **kwargs):
         super().__init__(**kwargs)
@@ -58,6 +70,9 @@ class Ability(DataModel):
 
 
 class Move(DataModel):
+    """
+    Move if a type of DataModel.
+    """
     def __init__(self, generation=None, accuracy=None, pp=None, power=None,
                  type=None, damage_class=None, short_effect=None,
                  level_learned_at=None, **kwargs):
@@ -82,6 +97,9 @@ class Move(DataModel):
 
 
 class Stat(DataModel):
+    """
+    Stat if a type of DataModel.
+    """
     def __init__(self, is_battle_only=None, base_stat=None, **kwargs):
         super().__init__(**kwargs)
         self.is_battle_only = is_battle_only
